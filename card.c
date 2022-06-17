@@ -1,15 +1,16 @@
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 
-struct card {
+typedef struct Card{
 	char suit[20];
 	int number;
 	char type[20];
 	char name[20];
 	char ability[20];
 	int (*func)(int,int,int);
-	struct card *next;
-	};
+	struct Card *next;
+	}card;
 int BANG(int,int,int);
 int MISSED(int,int,int);
 int GATLING(int,int,int);
@@ -26,14 +27,15 @@ void CreateCard(card *pointer);
 void Move1Card(card *to,card *from,int number);
 void print(card *set); 
 card *gettail(card *from);
-	//ÊäΩÁâåÂ†Ü = deck
-	//Ê£ÑÁâåÂ†Ü = deadwood 
+	//©‚µP∞Ô = deck
+	//±ÛµP∞Ô = deadwood 
 int main(){
 	card *pointer,*temp;
-	card *deck = new card();
-	card *deadwood = new card();
+	card *deck;
+	deck = malloc(sizeof(card));
+	card *deadwood = malloc(sizeof(card));
 	CreateCard(deck);
-	card *player1 = new card();
+	card *player1 = malloc(sizeof(card));
 	draw(player1,deck,5);
 	Move1Card(deadwood,player1,3);
 	printf("player1:\n");
@@ -49,7 +51,7 @@ int main(){
 	//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
 	
 }
-void print(card *set){			//Ë´ãÂ°´header 
+void print(card *set){			//Ω–∂Òheader 
 	card *pointer = set;
 	if(pointer->next == NULL){
 		printf("empty\n");
@@ -59,7 +61,7 @@ void print(card *set){			//Ë´ãÂ°´header
 		printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
 	}
 }
-void Move1Card(card *to,card *from,int number){			//ÁâåÂ†Ü‰∏çËÉΩÁÇ∫Á©∫!!! 
+void Move1Card(card *to,card *from,int number){			//µP∞Ô§£Ø‡¨∞™≈!!! 
 	card *pointer = from;
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
@@ -135,14 +137,14 @@ int DUEL(int x,int y,int z){
 void CreateCard(card *pointer){
 	
 	//BARREL 2
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"BARREL",20);
 	strncpy(pointer->ability,"BARREL",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 12;
 	strncpy(pointer->type,"equipment",20);
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"BARREL",20);
 	strncpy(pointer->ability,"BARREL",20);
@@ -150,7 +152,7 @@ void CreateCard(card *pointer){
 	pointer->number = 13;
 	strncpy(pointer->type,"equipment",20);//BARREL
 	//SCOPE 1
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"SCOPE",20);
 	strncpy(pointer->ability,"SCOPE",20);
@@ -158,14 +160,14 @@ void CreateCard(card *pointer){
 	pointer->number = 1;
 	strncpy(pointer->type,"equipment",20);//SCOPE
 	//MUSTANG 2
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"MUSTANG",20);
 	strncpy(pointer->ability,"MUSTANG",20);
 	strncpy(pointer->suit,"HEART",20);
 	pointer->number = 8;
 	strncpy(pointer->type,"equipment",20);
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"MUSTANG",20);
 	strncpy(pointer->ability,"MUSTANG",20);
@@ -173,7 +175,7 @@ void CreateCard(card *pointer){
 	pointer->number = 9;
 	strncpy(pointer->type,"equipment",20);//MUSTANG
 	//JAIL 3
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"JAIL",20);
 	strncpy(pointer->ability,"JAIL",20);
@@ -181,7 +183,7 @@ void CreateCard(card *pointer){
 	pointer->number = 4;
 	strncpy(pointer->type,"equipment",20);
 	for(int i=10;i<=11;i++){
-		pointer->next = new card();
+		pointer->next = malloc(sizeof(card));
 		pointer = pointer->next;
 		strncpy(pointer->name,"JAIL",20);
 		strncpy(pointer->ability,"JAIL",20);
@@ -190,7 +192,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"equipment",20);//JAIL
 	}
 	//DYNAMITE 1
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"DYNAMITE",20);
 	strncpy(pointer->ability,"DYNAMITE",20);
@@ -198,14 +200,14 @@ void CreateCard(card *pointer){
 	pointer->number = 2;
 	strncpy(pointer->type,"equipment",20);//DYNAMITE
 	//VOLCANIC 2
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"VOLCANIC",20);
 	strncpy(pointer->ability,"VOLCANIC",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 10;
 	strncpy(pointer->type,"equipment",20);
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"VOLCANIC",20);
 	strncpy(pointer->ability,"VOLCANIC",20);
@@ -213,7 +215,7 @@ void CreateCard(card *pointer){
 	pointer->number = 10;
 	strncpy(pointer->type,"equipment",20);//VOLCANIC
 	//SCHOFIELD 3
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"SCHOFIELD",20);
 	strncpy(pointer->ability,"SCHOFIELD",20);
@@ -221,7 +223,7 @@ void CreateCard(card *pointer){
 	pointer->number = 13;
 	strncpy(pointer->type,"equipment",20);
 	for(int i=11;i<=12;i++){
-		pointer->next = new card();
+		pointer->next = malloc(sizeof(card));
 		pointer = pointer->next;
 		strncpy(pointer->name,"SCHOFIELD",20);
 		strncpy(pointer->ability,"SCHOFIELD",20);
@@ -230,7 +232,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"equipment",20);//SCHOFIELD
 	}
 	//REMINGTON 1
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"REMINGTON",20);
 	strncpy(pointer->ability,"REMINGTON",20);
@@ -238,7 +240,7 @@ void CreateCard(card *pointer){
 	pointer->number = 13;
 	strncpy(pointer->type,"equipment",20);//REMINGTON
 	//REV.CARABINE 1
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"REV.CARABINE",20);
 	strncpy(pointer->ability,"REV.CARABINE",20);
@@ -246,7 +248,7 @@ void CreateCard(card *pointer){
 	pointer->number = 1;
 	strncpy(pointer->type,"equipment",20);//REV.CARABINE
 	//WINCHEDTER 1
-	pointer->next = new card();
+	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"WINCHEDTER",20);
 	strncpy(pointer->ability,"WINCHEDTER",20);
@@ -254,7 +256,7 @@ void CreateCard(card *pointer){
 	pointer->number = 8;
 	strncpy(pointer->type,"equipment",20);//WINCHEDTER
 	//BANG 25
-	pointer->next = new card();//BANG
+	pointer->next = malloc(sizeof(card));//BANG
 	pointer = pointer->next;
 	strncpy(pointer->name,"BANG",20);
 	strncpy(pointer->ability,"BANG",20);
@@ -262,7 +264,7 @@ void CreateCard(card *pointer){
 	pointer->number = 1;
 	pointer->func = &BANG;
 	strncpy(pointer->type,"item",20);
-	pointer->next = new card();//BANG
+	pointer->next = malloc(sizeof(card));//BANG
 	pointer = pointer->next;
 	strncpy(pointer->name,"BANG",20);
 	strncpy(pointer->ability,"BANG",20);
@@ -271,7 +273,7 @@ void CreateCard(card *pointer){
 	pointer->func = &BANG;
 	strncpy(pointer->type,"item",20);
 	for(int i=12;i<=13;i++){
-		pointer->next = new card();//BANG
+		pointer->next = malloc(sizeof(card));//BANG
 		pointer = pointer->next;
 		strncpy(pointer->name,"BANG",20);
 		strncpy(pointer->ability,"BANG",20);
@@ -281,7 +283,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	for(int i=1;i<=13;i++){
-		pointer->next = new card();//BANG
+		pointer->next = malloc(sizeof(card));//BANG
 		pointer = pointer->next;
 		strncpy(pointer->name,"BANG",20);
 		strncpy(pointer->ability,"BANG",20);
@@ -291,7 +293,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	for(int i=2;i<=9;i++){
-		pointer->next = new card();//BANG
+		pointer->next = malloc(sizeof(card));//BANG
 		pointer = pointer->next;
 		strncpy(pointer->name,"BANG",20);
 		strncpy(pointer->ability,"BANG",20);
@@ -302,7 +304,7 @@ void CreateCard(card *pointer){
 	}
 	//MISSED 12
 	for(int i=2;i<=8;i++){
-		pointer->next = new card();//MISSED
+		pointer->next = malloc(sizeof(card));//MISSED
 		pointer = pointer->next;
 		strncpy(pointer->name,"MISSED",20);
 		strncpy(pointer->ability,"MISSED",20);
@@ -312,7 +314,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	for(int i=10;i<=13;i++){
-		pointer->next = new card();//MISSED
+		pointer->next = malloc(sizeof(card));//MISSED
 		pointer = pointer->next;
 		strncpy(pointer->name,"MISSED",20);
 		strncpy(pointer->ability,"MISSED",20);
@@ -321,7 +323,7 @@ void CreateCard(card *pointer){
 		pointer->func = &MISSED;
 		strncpy(pointer->type,"item",20);
 	}
-	pointer->next = new card();//MISSED
+	pointer->next = malloc(sizeof(card));//MISSED
 	pointer = pointer->next;
 	strncpy(pointer->name,"MISSED",20);
 	strncpy(pointer->ability,"MISSED",20);
@@ -330,7 +332,7 @@ void CreateCard(card *pointer){
 	pointer->func = &MISSED;
 	strncpy(pointer->type,"item",20);
 	//GATLING 1
-	pointer->next = new card();//GATLING
+	pointer->next = malloc(sizeof(card));//GATLING
 	pointer = pointer->next;
 	strncpy(pointer->name,"GATLING",20);
 	strncpy(pointer->ability,"GATLING",20);
@@ -339,14 +341,14 @@ void CreateCard(card *pointer){
 	pointer->func = &GATLING;
 	strncpy(pointer->type,"item",20);
 	//INDIANS 1
-	pointer->next = new card();//INDIANS
+	pointer->next = malloc(sizeof(card));//INDIANS
 	pointer = pointer->next;
 	strncpy(pointer->name,"INDIANS",20);
 	strncpy(pointer->ability,"INDIANS",20);
 	strncpy(pointer->suit,"DIAMOND",20);
 	pointer->number = 13;
 	pointer->func = &INDIANS;
-	pointer->next = new card();//INDIANS
+	pointer->next = malloc(sizeof(card));//INDIANS
 	pointer = pointer->next;
 	strncpy(pointer->name,"INDIANS",20);
 	strncpy(pointer->ability,"INDIANS",20);
@@ -355,7 +357,7 @@ void CreateCard(card *pointer){
 	pointer->func = &INDIANS;
 	strncpy(pointer->type,"item",20);
 	//PANIC 4
-	pointer->next = new card();//PANIC
+	pointer->next = malloc(sizeof(card));//PANIC
 	pointer = pointer->next;
 	strncpy(pointer->name,"PANIC",20);
 	strncpy(pointer->ability,"PANIC",20);
@@ -363,7 +365,7 @@ void CreateCard(card *pointer){
 	pointer->number = 8;
 	pointer->func = &PANIC;
 	strncpy(pointer->type,"item",20);
-	pointer->next = new card();//PANIC
+	pointer->next = malloc(sizeof(card));//PANIC
 	pointer = pointer->next;
 	strncpy(pointer->name,"PANIC",20);
 	strncpy(pointer->ability,"PANIC",20);
@@ -372,7 +374,7 @@ void CreateCard(card *pointer){
 	pointer->func = &PANIC;
 	strncpy(pointer->type,"item",20);
 	for(int i=11;i<=12;i++){
-		pointer->next = new card();//PANIC
+		pointer->next = malloc(sizeof(card));//PANIC
 		pointer = pointer->next;
 		strncpy(pointer->name,"PANIC",20);
 		strncpy(pointer->ability,"PANIC",20);
@@ -382,7 +384,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	//CAT BALOU 4
-	pointer->next = new card();//CAT BALOU
+	pointer->next = malloc(sizeof(card));//CAT BALOU
 	pointer = pointer->next;
 	strncpy(pointer->name,"CAT BALOU",20);
 	strncpy(pointer->ability,"CAT BALOU",20);
@@ -391,7 +393,7 @@ void CreateCard(card *pointer){
 	pointer->func = &CATBALOU;
 	strncpy(pointer->type,"item",20);
 	for(int i=9;i<=11;i++){
-		pointer->next = new card();//CAT BALOU
+		pointer->next = malloc(sizeof(card));//CAT BALOU
 		pointer = pointer->next;
 		strncpy(pointer->name,"CAT BALOU",20);
 		strncpy(pointer->ability,"CAT BALOU",20);
@@ -402,7 +404,7 @@ void CreateCard(card *pointer){
 	}
 	//STAGECOACH 2
 	for(int i=1;i<=2;i++){
-		pointer->next = new card();//STAGECOACH
+		pointer->next = malloc(sizeof(card));//STAGECOACH
 		pointer = pointer->next;
 		strncpy(pointer->name,"STAGECOACH",20);
 		strncpy(pointer->ability,"STAGECOACH",20);
@@ -412,7 +414,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	//WELLS FARGO 1
-	pointer->next = new card();//WELLS FARGO
+	pointer->next = malloc(sizeof(card));//WELLS FARGO
 	pointer = pointer->next;
 	strncpy(pointer->name,"WELLS FARGO",20);
 	strncpy(pointer->ability,"WELLS FARGO",20);
@@ -421,7 +423,7 @@ void CreateCard(card *pointer){
 	pointer->func = &WELLSFARGO;
 	strncpy(pointer->type,"item",20);
 	//GENERAL STORE 2
-	pointer->next = new card();//GENERAL STORE
+	pointer->next = malloc(sizeof(card));//GENERAL STORE
 	pointer = pointer->next;
 	strncpy(pointer->name,"GENERAL STORE",20);
 	strncpy(pointer->ability,"GENERAL STORE",20);
@@ -429,7 +431,7 @@ void CreateCard(card *pointer){
 	pointer->number = 12;
 	pointer->func = &GENERALSTORE;
 	strncpy(pointer->type,"item",20);
-	pointer->next = new card();//GENERAL STORE
+	pointer->next = malloc(sizeof(card));//GENERAL STORE
 	pointer = pointer->next;
 	strncpy(pointer->name,"GENERAL STORE",20);
 	strncpy(pointer->ability,"GENERAL STORE",20);
@@ -439,7 +441,7 @@ void CreateCard(card *pointer){
 	strncpy(pointer->type,"item",20);
 	//BEER 6
 	for(int i=6;i<=11;i++){
-		pointer->next = new card();//BEER
+		pointer->next = malloc(sizeof(card));//BEER
 		pointer = pointer->next;
 		strncpy(pointer->name,"BEER",20);
 		strncpy(pointer->ability,"BEER",20);
@@ -449,7 +451,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->type,"item",20);
 	}
 	//SALOON 1
-	pointer->next = new card();//SALOON
+	pointer->next = malloc(sizeof(card));//SALOON
 	pointer = pointer->next;
 	strncpy(pointer->name,"SALOON",20);
 	strncpy(pointer->ability,"SALOON",20);
@@ -458,7 +460,7 @@ void CreateCard(card *pointer){
 	pointer->func = &SALOON;
 	strncpy(pointer->type,"item",20);
 	//DUEL 3
-	pointer->next = new card();//DUEL
+	pointer->next = malloc(sizeof(card));//DUEL
 	pointer = pointer->next;
 	strncpy(pointer->name,"DUEL",20);
 	strncpy(pointer->ability,"DUEL",20);
@@ -466,7 +468,7 @@ void CreateCard(card *pointer){
 	pointer->number = 11;
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
-	pointer->next = new card();//DUEL
+	pointer->next = malloc(sizeof(card));//DUEL
 	pointer = pointer->next;
 	strncpy(pointer->name,"DUEL",20);
 	strncpy(pointer->ability,"DUEL",20);
@@ -474,7 +476,7 @@ void CreateCard(card *pointer){
 	pointer->number = 12;
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
-	pointer->next = new card();//DUEL
+	pointer->next = malloc(sizeof(card));//DUEL
 	pointer = pointer->next;
 	strncpy(pointer->name,"DUEL",20);
 	strncpy(pointer->ability,"DUEL",20);
