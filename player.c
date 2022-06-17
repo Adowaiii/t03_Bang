@@ -1,21 +1,35 @@
-#include "Player.h"
+#include "player.h"
+#include "linkedlist.h"
 
 // 父類建構函式實現
 void Player_Ctor(Player *this, int id, int BoardNum, LinkedList CardinHand)
 {
     this->id = id;
     this->BoardNum = BoardNum;
-    this->LinkedList = CardinHand;
+    this->CardinHand = CardinHand;
 }
 
-int Animal_GetId(Player *this){
+int Player_GetId(Player *this){
     return this->id;
 }
 
-char Player_GetBoard(Player *this){
+int Player_GetBoard(Player *this){
     return this->BoardNum;
 }
 
-void Player_GetCards(Player *this){
+LinkedList Player_GetCards(Player *this){
     return this->CardinHand;
+}
+
+int _addCards(Player plyr, LinkedList list){
+    
+    addNode(plyr.CardinHand);
+
+    return list.id;
+}
+
+void _delCards(LinkedList deck, int card_ID){
+    
+    delNode(deck);
+    return 0;
 }
