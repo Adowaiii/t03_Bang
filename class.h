@@ -1,3 +1,0 @@
-struct class{
-    char occupation;
-}
