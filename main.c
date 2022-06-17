@@ -9,7 +9,8 @@
 #include "role.h"
 #include "character.h"
 #include "board.h"
-#include "player.h"
+#include "weapon.h"
+#include "mustang.h"
 
 #define PLAYER_NUM 4
 
@@ -32,10 +33,10 @@ int main()
 	printf("‖   |_______/ |__/  |__/|__/  %c__/ %c______/ |__/   ‖\n", 92, 92);
 	printf("====================================================\n");
 	printf("\n\n\nWelcome to Bang!\n");
-
 	////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////  GAME SETTING  /////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
+
 	/* Role */
 	int role_count[7] = {0};
 
@@ -103,12 +104,17 @@ int main()
 
 	/* Board */
 	Board player[PLAYER_NUM];
+	Weapon weapon[PLAYER_NUM];
+	Mustang mustang[PLAYER_NUM];
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
-		Board_Ctor(&player[i], i+1, character[i].hp, role[i], 0, 0, 0, 0);
+		// Initilaize the board of every player.
+		Weapon_Ctor(&weapon[i], 80, 1, 0);
+		Mustang_Ctor(&mustang[i], 80);
+		Board_Ctor(&player[i], i+1, character[i].hp, role[i], weapon[i], mustang[i], 0, 0, 0, 0);
 
-		//printf("[player%d] hp=%d, role=%s, character=%s\n", Board_id(&player[i]), Board_hp(&player[i]), Board_role(&player[i]).roleName, character[i].name);
+		//printf("[player%d] hp=%d, role=%s, character=%s, attackDistance=%d, mustangId=%d\n", Board_id(&player[i]), Board_hp(&player[i]), Board_role(&player[i]).roleName, character[i].name, Board_weapon(&player[i]).attackDistance, Board_mustang(&player[i]).mustangId);
 	}
-	
+
 	return 0;
 }

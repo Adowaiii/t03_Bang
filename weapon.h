@@ -4,25 +4,15 @@
 
 typedef struct
 {
-	char *weaponName;
+	int weaponId;
 	int attackDistance;
+	bool isVolcanic;
 } Weapon;
 
-void Weapon_Ctor(Character *this, char *weaponName, int attackDistance);
+void Weapon_Ctor(Weapon *this, int weaponId, int attackDistance, bool isVolcanic);
 
-char *Weapon_weaponName(Weapon *this);
-int Weapon_attackDistance(Character *this);
-
-#endif
-
-
-
-/*
-// Function: character_choose
-#ifndef _CHARACTER_CHOOSE_H_
-#define _CHARACTER_CHOOSE_H_
-
-Character character_choose(Character c, int number);
+int Weapon_weaponId(Weapon *this);
+int Weapon_attackDistance(Weapon *this);
+bool Weapon_isVolcanic(Weapon *this);
 
 #endif
-*/

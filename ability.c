@@ -6,9 +6,9 @@
 //Bart Cassidy
 //能力：被扣一滴血時，可以從卡牌堆中抽一張牌
 
-void _BartCassidy_(Player player, LinkedList deck) {
+void _BartCassidy_(Player player, sList deck) {
     
-    _AddCards(player, deck);
+    _addCards(player, deck);
     
     return 0;
 }

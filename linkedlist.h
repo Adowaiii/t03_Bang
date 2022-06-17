@@ -1,24 +1,25 @@
-#include <stdio.h>
-#include <stdbool.h>
+#pragma once
 
-#ifndef _LINKEDLIST_H_
-#define _LINKEDLIST_H_
+#include <stdint.h>
 
+struct _sListNode;
+struct _sListParam;
 
-typedef struct{
-    int id;
-}Node;
+typedef struct _sList
+{
+    struct _sListParam  *pParam;
+    struct _sListNode   *pHead;
+    struct _sListNode   *pTail;
+} sList;
 
-typedef struct{
-    Node node;
-} LinkedList;
+sList * createList();
+int32_t freeList( sList * );
 
-void LinkedList_Ctor(Node node, int Num);
+void    regCmpCallback( sList *, int32_t (*)( const void *, const void * ) );
+void    regFreeCallback( sList *, void  (*)( void * ) );
+void    regPrintCallback( sList *, void  (*)( const void * ) );
 
-// 獲取父類屬性宣告
-bool isEmpty(LinkedList *this);
-bool isFull(LinkedList *this);
-void addNode(LinkedList *this);
-void delNode(LinkedList *this);
-
-#endif
+int32_t addNode( sList *, void * );
+int32_t delNode( sList *, void * );
+int32_t getListSize( sList * ); 
+int32_t printList( sList * );

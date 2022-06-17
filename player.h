@@ -8,16 +8,16 @@
 typedef struct {
     int id;
     char BoardNum;
-    LinkedList CardinHand;
+    sList CardinHand;
 } Player;
 
 // 建構函式宣告
-void Player_Ctor(Player *this, int id, int BoardNum, LinkedList CardinHand);
+void Player_Ctor(Player *this, int id, int BoardNum, sList CardinHand);
 
 // 獲取父類屬性宣告
 int Player_GetId(Player *this);
-char Player_GetBoard(Player *this);
-LinkedList Player_GetCards(Player *this);
+int Player_GetBoard(Player *this);
+sList Player_GetCards(Player *this);
 void Player_AddCards(Player *this);
 
 #endif

@@ -2,7 +2,7 @@
 #include "linkedlist.h"
 
 // 父類建構函式實現
-void Player_Ctor(Player *this, int id, int BoardNum, LinkedList CardinHand)
+void Player_Ctor(Player *this, int id, int BoardNum, sList CardinHand)
 {
     this->id = id;
     this->BoardNum = BoardNum;
@@ -17,19 +17,18 @@ int Player_GetBoard(Player *this){
     return this->BoardNum;
 }
 
-LinkedList Player_GetCards(Player *this){
+sList Player_GetCards(Player *this){
     return this->CardinHand;
 }
 
-int _addCards(Player plyr, LinkedList list){
+int _addCards(Player plyr, sList list){
     
-    addNode(plyr.CardinHand);
-
-    return list.id;
+    addNode(&plyr.CardinHand, list.pTail);
+    return list.pParam;
 }
 
-void _delCards(LinkedList deck, int card_ID){
+void _delCards(sList deck, int card_ID){
     
-    delNode(deck);
+    delNode(&deck, card_ID);
     return 0;
 }

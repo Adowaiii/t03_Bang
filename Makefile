@@ -1,2 +1,2 @@
 all:
-	gcc test.c role.c board.c character.c weapon.c -o test
+	gcc test.c role.c character.c board.c weapon.c mustang.c -o test
