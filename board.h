@@ -20,7 +20,7 @@ void Board_Ctor(Board *this, int id, int hp, Role role, bool isScope, bool isBar
 
 int Board_id(Board *this);
 int Board_hp(Board *this);
-Role Board_role(Board *this);
+Role Board_rolsude(Board *this);
 bool Board_isScope(Board *this);
 bool Board_isBarrel(Board *this);
 bool Board_isJail(Board *this);
