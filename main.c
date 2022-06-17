@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "player.h"
 #include "role.h"
 #include "character.h"
 #include "board.h"
@@ -103,7 +104,8 @@ int main()
 	}
 
 	/* Board */
-	Board player[PLAYER_NUM];
+	Board gamebBoard[PLAYER_NUM];
+	Player player[PLAYER_NUM];
 	Weapon weapon[PLAYER_NUM];
 	Mustang mustang[PLAYER_NUM];
 	for (int i=0; i<PLAYER_NUM; i++)
@@ -111,9 +113,10 @@ int main()
 		// Initilaize the board of every player.
 		Weapon_Ctor(&weapon[i], 80, 1, 0);
 		Mustang_Ctor(&mustang[i], 80);
-		Board_Ctor(&player[i], i+1, character[i].hp, role[i], weapon[i], mustang[i], 0, 0, 0, 0);
+		Board_Ctor(&gamebBoard[i], i+1, character[i].hp, role[i], weapon[i], mustang[i], 0, 0, 0, 0);
+		Player_Ctor(&player[i], i+1, i+1);
 
-		//printf("[player%d] hp=%d, role=%s, character=%s, attackDistance=%d, mustangId=%d\n", Board_id(&player[i]), Board_hp(&player[i]), Board_role(&player[i]).roleName, character[i].name, Board_weapon(&player[i]).attackDistance, Board_mustang(&player[i]).mustangId);
+		printf("[player%d] [board%d] hp=%d, role=%s, character=%s, attackDistance=%d, mustangId=%d\n", Player_GetId(&player[i]), Board_id(&gamebBoard[i]), Board_hp(&gamebBoard[i]), Board_role(&gamebBoard[i]).roleName, character[i].name, Board_weapon(&gamebBoard[i]).attackDistance, Board_mustang(&gamebBoard[i]).mustangId);
 	}
 
 	return 0;
