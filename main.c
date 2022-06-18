@@ -176,10 +176,10 @@ void press_to_continue()
 	return;
 }
 
-int print_HandCard(int player)
+int print_HandCard(int player_id)
 {
 	int k = 0;
-	card *pointer = HandCard[player];
+	card *pointer = HandCard[player_id];
 	printf("This is your hand card:\n");
 	while (pointer->next != NULL)
 	{
@@ -199,10 +199,10 @@ int round_check(int round)
 	}
 }
 
-int discard_check(int card_num, int player)
+int discard_check(int card_num, int player_id)
 {
 	// Don't need to discard.
-	if (card_num <= Board_hp(&board[player]))
+	if (card_num <= Board_hp(&board[player_id]))
 	{
 		return 0;
 	}
@@ -213,22 +213,66 @@ int discard_check(int card_num, int player)
 	}
 }
 
-/*
-int win_check(Board board[PLAYER_NUM], Role role[PLAYER_NUM])
+int beer_check(int player_id)
 {
+	int k = 1;
+	card *pointer = HandCard[player_id];
+	while (pointer->next != NULL)
+	{
+		pointer = pointer->next;
+		if (strncmp(pointer->name, "BEER", 4) == 0)
+		{
+			return k;
+		}
+		k++;
+	}
+
+	return 0;
+}
+
+int win_check()
+{
+	int sheriff_dead = 0;
+	int outlaw_dead = 0;
+	int renegade_dead = 0;
+
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
-		if (isDead[i] == 0 && Board_hp(&board[i]) == 0)
+		if (isDead[i] == 1 && strncmp(Role_roleName(&role[i]), "Sheriff", 7) == 0)
 		{
-			isDead[i] = 1;
+			sheriff_dead++;
+		}
+		else if (isDead[i] == 1 && strncmp(Role_roleName(&role[i]), "Outlaw", 6) == 0)
+		{
+			outlaw_dead++;
+		}
+		else if (isDead[i] == 1 && strncmp(Role_roleName(&role[i]), "Renegade", 8) == 0)
+		{
+			renegade_dead++;
 		}
 	}
 
+	// Sheriff Win
+	if (sheriff_dead == 0 && outlaw_dead == 2 && renegade_dead == 1)
+	{
+		printf("Sheriff Win!\n");
+		return 1;
+	}
+	// Renegade Win
+	else if (sheriff_dead == 1 && outlaw_dead == 2 && renegade_dead == 0)
+	{
+		printf("Renegade Win!\n");
+		return 1;
+	}
+	// Outlaw Win
+	else if (sheriff_dead == 1)
+	{
+		printf("Outlaw Win!\n");
+		return 1;
+	}
 
-
-	//if (Role_roleName(&role[i]))
+	return 0;
 }
-*/
 
 int main()
 {
@@ -511,14 +555,40 @@ int main()
 					///////* Play Card *///////
 					else
 					{
-						
+						int isBang = 0;
 					}
 
 					///////* Dead Check *///////
-					for ()
+					for (int j=0; j<PLAYER_NUM; j++)
+					{
+						while (isDead[j] == 0 && Board_hp(&board[j]) <= 0)
+						{
+							///////* Beer Check *///////
+							int beer_id = beer_check(j);
+							if (beer_id == 0)
+							{	
+								///////* Dead ---> Expose Role ---> Reward/Penalty *///////
+								isDead[j] = 1;
+								printf("Player%d is dead! The role is %s\n", j, Role_roleName(&role[j]));
+								// Player who causes the dead.
+							}
+							else
+							{
+								board[j].hp++;
+								Move1Card(deadwood, HandCard[j], beer_id);
+							}
+						}
+					}
 
 					///////* Win Check *///////
-					
+					if (win_check() == 1)
+					{
+						return 0;
+					}
+					else
+					{
+						continue;
+					}			
 				}
 				///////* AI Player: Player2, Player3, Player4 *///////
 				else
