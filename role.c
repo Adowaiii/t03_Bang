@@ -24,7 +24,7 @@ char *Role_object(Role *this)
 
 // Function: role_choose
 char role_database[4][10] = {"Sheriff", "Vice", "Outlaw", "Renegade"};
-char goal_database[4][40] = {"Kill all the outlaws and renegades.", "Kill all the outlaws and renegades.", "Kill the sheriff.", "The only one alive."};
+char goal_database[4][40] = {"kill all the outlaws and renegades", "kill all the outlaws and renegades", "kill the sheriff", "be the only one alive"};
 
 Role role_choose(Role r, int number)
 {
