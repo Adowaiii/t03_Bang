@@ -28,8 +28,8 @@
 	void print(card *set); 
 	int FindCard(card *set,char *input);
 	card *gettail(card *from);
-		//©âµP°ï = deck
-		//±óµP°ï = deadwood 
+		//æŠ½ç‰Œå † = deck
+		//æ£„ç‰Œå † = deadwood 
 	int main(){
 		card *HandCard[4];
 		for(int i=0;i<4;++i){
@@ -70,7 +70,7 @@
 		return -1;
 	}
 	
-	void print(card *set){			//½Ğ¶ñheader 
+	void print(card *set){			//è«‹å¡«header 
 		card *pointer = set;
 		if(pointer->next == NULL){
 			printf("empty\n");
@@ -80,7 +80,7 @@
 			printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
 		}
 	}
-	void Move1Card(card *to,card *from,int number){			//µP°ï¤£¯à¬°ªÅ!!! 
+	void Move1Card(card *to,card *from,int number){			//ç‰Œå †ä¸èƒ½ç‚ºç©º!!! 
 		card *pointer = from;
 		for(int i=0;i<number-1;i++){
 			pointer = pointer->next;
