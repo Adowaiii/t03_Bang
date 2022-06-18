@@ -16,6 +16,18 @@
 
 #define PLAYER_NUM 4
 
+Player player[PLAYER_NUM];
+card *deck;
+card *deadwood;
+card *HandCard[PLAYER_NUM];
+card *EquipmentCard[PLAYER_NUM];
+Role role[PLAYER_NUM];
+Character character[PLAYER_NUM];
+Board board[PLAYER_NUM];
+Weapon weapon[PLAYER_NUM];
+Mustang mustang[PLAYER_NUM];
+
+int isDead[PLAYER_NUM];
 int distance[PLAYER_NUM][PLAYER_NUM];
 
 void distance_initialize(int player_num)
@@ -66,7 +78,6 @@ void distance_compute(int case_num, int player)
 					distance[i][player]++;
 				}
 			}
-
 			break;
 		}
 	
@@ -87,9 +98,7 @@ void distance_compute(int case_num, int player)
 						distance[player][i] = 1;
 					}
 				}
-				
 			}
-
 			break;
 		}
 
@@ -100,7 +109,7 @@ void distance_compute(int case_num, int player)
 	return;
 }
 
-void print_board(int isDead[PLAYER_NUM], Role role[PLAYER_NUM], Character character[PLAYER_NUM], Board board[PLAYER_NUM])
+void print_board()
 {
 	system("clear");
 	printf("============================================================================================‖ Board Information‖ ===========================================================================================\n\n");
@@ -134,6 +143,15 @@ void print_board(int isDead[PLAYER_NUM], Role role[PLAYER_NUM], Character charac
 		printf(" - Ability: %s\n", Character_ability(&character[i]));
 
 		// Equipment Card
+		printf(" - Equipment Card: ");
+		print(EquipmentCard[i]);
+
+		// Hand Card: Player1
+		if (i == 0)
+		{
+			printf(" - Hand Card: ");
+			Player_GetCards(&player[i]);
+		}
 
 		printf("\n");
 	}
@@ -157,6 +175,44 @@ void press_to_continue()
 
 	return;
 }
+
+int print_HandCard(int player)
+{
+	int k = 0;
+	card *pointer = HandCard[player];
+	printf("This is your hand card:\n");
+	while (pointer->next != NULL)
+	{
+		pointer = pointer->next;
+		printf("\"%d\" %s\n", k+1, pointer->name);
+		k++;
+	}
+
+	return k;
+}
+
+int round_check(int round)
+{
+	if (round == PLAYER_NUM-1)
+	{
+		return -1;
+	}
+}
+
+int discard_check(int card_num, int player)
+{
+	// Don't need to discard.
+	if (card_num <= Board_hp(&board[player]))
+	{
+		return 0;
+	}
+	// Need to discard.
+	else
+	{
+		return 1;
+	}
+}
+
 /*
 int win_check(Board board[PLAYER_NUM], Role role[PLAYER_NUM])
 {
@@ -176,7 +232,10 @@ int win_check(Board board[PLAYER_NUM], Role role[PLAYER_NUM])
 
 int main()
 {
-	/* Intro */
+	////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////  INTRO  ////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
 	system("clear");                            
 	printf("                                                                      ====================================================                                                                      \n");
 	printf("                                                                      ‖    /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$  ‖                                                                      \n");
@@ -192,7 +251,11 @@ int main()
 	printf("                                                                                    ‖ Press [S] to Start‖                                                                                    \n");
 	printf("                                                                                    ‖ Press [E] to Exit ‖                                                                                    \n");
 
-	/* Game start or exit. */
+	////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////  GAME SETTING  /////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	///////* Game start or exit. *///////
 	char c[1];
 	while (1)
 	{
@@ -214,10 +277,9 @@ int main()
 	memset(distance, 0, sizeof(distance));
 	distance_initialize(PLAYER_NUM);
 
-	int isDead[PLAYER_NUM];
 	memset(isDead, 0, sizeof(isDead));
 
-	/* Role */
+	///////* Role *///////
 	srand(time(NULL));
 	int random_num;
 
@@ -233,7 +295,6 @@ int main()
 		role_count[3] = 1;	// Renegade
 	}
 
-	Role role[PLAYER_NUM];
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		// Random choosing roles (without repeating).
@@ -257,11 +318,10 @@ int main()
 	printf(" - You are the \"\033[1;31m%s\033[0m\"!\n", Role_roleName(&role[0]));
 	printf(" - Your object is to \"\033[1;31m%s\033[0m\".\n", Role_object(&role[0]));
 
-	/* Character */
+	///////* Character *///////
 	int sheriff = 0;
 	int character_count[16];
 	memset(character_count, 1, sizeof(character_count));
-	Character character[PLAYER_NUM];
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		// Random choosing characters (without repeating).
@@ -301,51 +361,20 @@ int main()
 
 	printf(" - Your character is \"\033[1;31m%s\033[0m\", and the ability is \"\033[1;31m%s\033[0m\"\n", Character_name(&character[0]), Character_ability(&character[0]));
 
-	/* Player */
-/*
-	card *HandCard[PLAYER_NUM];
+	///////* Card *///////
+	deck = malloc(sizeof(card));
+	CreateCard(deck);
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		HandCard[i] = malloc(sizeof(card));
+		EquipmentCard[i] = malloc(sizeof(card));
+		draw(HandCard[i], deck, character[i].hp);
+		Player_Ctor(&player[i], i, i, HandCard[i]);
 	}
-*/
-
-	Player player[PLAYER_NUM];
-
-	card *deck = malloc(sizeof(card));
-	CreateCard(deck);
-
-	//card *pointer = Player_GetCards(&player[0]);
-	card *pointer = malloc(sizeof(card));
-	*pointer = player[0].CardinHand;
-	CreateCard(pointer);
-
-	draw(player[0].CardinHand, deck, 5);
-	print(pointer);
-
-	card *deadwood = malloc(sizeof(card));
-
-//	card *pointer,*temp;
-//	card *deck;
-//	deck = malloc(sizeof(card));
-//	card *deadwood = malloc(sizeof(card));
-//	CreateCard(deck);
-//	card *player1 = malloc(sizeof(card));
-//	draw(player1,deck,5);
-//	Move1Card(deadwood,player1,3);
-//	printf("player1:\n");
-//	print(player1); 
-//	printf("deadwood:\n");
-//	print(deadwood); 
-//	printf("deck:\n");
-//	print(deck); 
 
 	press_to_continue();
 
-	/* Board */
-	Board board[PLAYER_NUM];
-	Weapon weapon[PLAYER_NUM];
-	Mustang mustang[PLAYER_NUM];
+	///////* Board *///////
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		// Initilaize the board of every player.
@@ -354,26 +383,27 @@ int main()
 		Board_Ctor(&board[i], i+1, character[i].hp, role[i], weapon[i], mustang[i], 0, 0, 0, 0);
 	}
 
-	/* Game */
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////  GAME  ////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
 	while (1)
 	{
-		/* Player Round: start with the Sheriff */
-		for (int i=sheriff; i<PLAYER_NUM; i++)
+		///////* Player Round: start with the Sheriff *///////
+		//for (int i=sheriff; i<PLAYER_NUM; i++)
+		for (int i=0; i<PLAYER_NUM; i++)
 		{
-			/* Dead Check */
+			///////* Dead Check *///////
 			if (isDead[i] == 1)
 			{
-				if (i == PLAYER_NUM-1)
-				{
-					i = -1;
-				}
+				i = round_check(i);
 				continue;
 			}			
 
-			print_board(isDead, role, character, board);
-			printf("[Player%d Round]\n", i+1);
+			print_board(i);
+			printf("\n[Player%d Round]\n", i+1);
 
-			/* Bomb Check */
+			///////* Bomb Check *///////
 			if (Board_isBomb(&board[i]) == 1)
 			{
 				printf("You have a [Dynamite].\n");
@@ -386,23 +416,18 @@ int main()
 				{
 					
 				}
-/*
-				if (i == PLAYER_NUM-1)
-				{
-					i = -1;
-				}
-*/
-			}
-			print_board(isDead, role, character, board);
-			printf("[Player%d Round]\n", i+1);
-			press_to_continue();
 
-			/* Jail Check */
+				print_board();
+				printf("\n[Player%d Round]\n", i+1);
+				press_to_continue();
+			}
+
+			///////* Jail Check *///////
 			if (Board_isJail(&board[i]) == 1)
 			{
 				printf("You have a [Jail].\n");
 				///// Jail Function /////
-				// sucess ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
+				// success ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
 				// fail ---> continue, put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
 
 				// Lucky Duke
@@ -411,18 +436,14 @@ int main()
 					
 				}
 
-/*
-				if (i == PLAYER_NUM-1)
-				{
-					i = -1;
-				}
-*/
-			}
-			print_board(isDead, role, character, board);
-			printf("[Player%d Round]\n", i+1);
-			press_to_continue();
+				//continue: i = round_check(i);
 
-			/* Drawing 2 Cards */
+				print_board();
+				printf("\n[Player%d Round]\n", i+1);
+				press_to_continue();
+			}
+
+			///////* Drawing 2 Cards *///////
 			// Black Jack
 			if (strncmp(character[i].name, "Black Jack", 10) == 0)
 			{
@@ -450,33 +471,56 @@ int main()
 			
 			while (1)
 			{
-				print_board(isDead, role, character, board);
-				printf("[Player%d Round]\n", i+1);
+				print_board();
+				printf("\n[Player%d Round]\n", i+1);
 
-				/* Player1 */
+				///////* Player1 *///////
 				if (i == 0)
 				{
+					int card_num;
 					int card_id;
-					printf("This is your card:\n");
-					printf("\"0\" Skip!\n");
-					///// print card /////
-					printf("Press the \"id\" of card which you want to play: ");
+					card_num = print_HandCard(i);
+					printf("Input the \"ID\" of card which you want to play or input \"0\" to skip: ");
 					scanf("%d", &card_id);
 
-
-					// 0: Skip
+					// Skip
 					if (card_id == 0)
 					{
-						
+						///////* Discard Check *///////
+						while (discard_check(card_num, i) != 0)
+						{
+							int discard_id;
+							print_HandCard(i);
+							printf("Input the \"ID\" of card which you want to discard: ");
+							scanf("%d", &discard_id);
 
+							if (discard_id < 0 || discard_id > card_num)
+							{
+								printf("Invalid \"ID\"!\n");
+							}
+							else
+							{
+								Move1Card(deadwood, HandCard[i], discard_id);
+								card_num--;
+								printf("Successfully discard!\n");
+							}
+						}
+						
 						break;
 					}
-					///// play card /////
+					///////* Play Card *///////
+					else
+					{
+						
+					}
 
-					/* Win Check */
+					///////* Dead Check *///////
+					for ()
+
+					///////* Win Check *///////
 					
 				}
-				/* AI Player: Player2, Player3, Player4 */
+				///////* AI Player: Player2, Player3, Player4 *///////
 				else
 				{
 					
@@ -486,10 +530,7 @@ int main()
 			}
 			break;
 
-			if (i == PLAYER_NUM-1)
-			{
-				i = -1;
-			}
+			i = round_check(i);
 		}
 
 		break;

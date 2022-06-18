@@ -32,12 +32,14 @@
 void print(card *set){			//ser = card head 
 	card *pointer = set;
 	if(pointer->next == NULL){
-		printf("empty\n");
+		printf("empty");
 	}
 	while(pointer->next != NULL){
 		pointer = pointer->next;
-		printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
+		printf("%s  ",pointer->name);
+		//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
 	}
+	printf("\n");
 }
 void Move1Card(card *to,card *from,int number){			//dont input empty cardset 
 	card *pointer = from;
@@ -72,7 +74,7 @@ void draw(card *to,card *from,int number){
 		from->next = tail->next;
 		tail->next = NULL;
 	}
-	printf("drawed\n");
+	//printf("drawed\n");
 }
 
 int BANG(int player1,int player2,int z){
@@ -463,5 +465,5 @@ void CreateCard(card *pointer){
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
 	pointer->next = NULL;
-	printf("Card Created\n");
+	//printf("Card Created\n");
 }

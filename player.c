@@ -1,6 +1,6 @@
 #include "player.h"
 
-void Player_Ctor(Player *this, int id, int BoardNum, card CardinHand)
+void Player_Ctor(Player *this, int id, int BoardNum, card *CardinHand)
 {
     this->id = id;
     this->BoardNum = BoardNum;
@@ -17,33 +17,7 @@ int Player_GetBoard(Player *this)
 	return this->BoardNum;
 }
 
-card Player_GetCards(Player *this)
+void Player_GetCards(Player *this)
 {
-	return this->CardinHand;
+	return print(this->CardinHand);
 }
-
-
-
-// Function
-int _addCardsfromDeck()
-{    
-	return 0;
-}
-
-int _delCardsfromDeck()
-{
-	return 0;
-}
-
-int _delCardsfromPlyer()
-{    
-	return 0;
-}
-
-int _addCardsfromPlayer()
-{
-	return 0;
-}
-
-
-
