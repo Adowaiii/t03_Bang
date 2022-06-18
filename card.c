@@ -2,56 +2,9 @@
 #include<string.h>
 #include<stdlib.h>
 
-typedef struct{
-	char suit[20];
-	int number;
-	char type[20];
-	char name[20];
-	char ability[20];
-	int (*func)(int,int,int);
-	struct Card *next;
-	}card;
-int BANG(int,int,int);
-int MISSED(int,int,int);
-int GATLING(int,int,int);
-int INDIANS(int,int,int);
-int PANIC(int,int,int);
-int CATBALOU(int,int,int);
-int STAGECOACH(int,int,int);
-int WELLSFARGO(int,int,int);
-int BEER(int,int,int);
-int SALOON(int,int,int);
-int DUEL(int,int,int);
-void draw(card *to,card *from,int number);
-void CreateCard(card *pointer);
-void Move1Card(card *to,card *from,int number);
-void print(card *set); 
-card *gettail(card *from);
-	//抽牌堆 = deck
-	//棄牌堆 = deadwood 
-/*int main(){
-	card *pointer,*temp;
-	card *deck;
-	deck = malloc(sizeof(card));
-	card *deadwood = malloc(sizeof(card));
-	CreateCard(deck);
-	card *player1 = malloc(sizeof(card));
-	draw(player1,deck,5);
-	Move1Card(deadwood,player1,3);
-	printf("player1:\n");
-	print(player1); 
-	printf("deadwood:\n");
-	print(deadwood); 
-	printf("deck:\n");
-	print(deck); 
-	
-	
-	//------------------------------//
-	pointer = gettail(player1); 
-	//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
-	
-}*/
-void print(card *set){			//請填header 
+#include"card.h"
+
+void print(card *set){			//ser = card head 
 	card *pointer = set;
 	if(pointer->next == NULL){
 		printf("empty\n");
@@ -61,7 +14,7 @@ void print(card *set){			//請填header
 		printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
 	}
 }
-void Move1Card(card *to,card *from,int number){			//牌堆不能為空!!! 
+void Move1Card(card *to,card *from,int number){		//dont input empty cardset 
 	card *pointer = from;
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
@@ -94,9 +47,9 @@ void draw(card *to,card *from,int number){
 		from->next = tail->next;
 		tail->next = NULL;
 	}
-	printf("drawed\n");
+	//printf("drawed\n");
 }
-/*
+
 int BANG(int player1,int player2,int z){
 	
 }
@@ -132,7 +85,7 @@ int SALOON(int x,int y,int z){
 }
 int DUEL(int x,int y,int z){
 	
-}*/
+}
 
 void CreateCard(card *pointer){
 	
