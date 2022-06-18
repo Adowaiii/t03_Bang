@@ -40,18 +40,21 @@ void _Blackjack_ (Player player, card *deck){
 
 void _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose){
 
-    if (cardToChoose->name == 'MISSED' || cardToChoose->name =='BANG'){
+    if (cardToChoose->name == "MISSED" || cardToChoose->name == "BANG"){
         int tmp;
         printf("Which card do you want to use it as?\n\n[1] BANG [2]MISSED\n");
         scanf("%d", &tmp);
-        if (tmp == 1)
+        if (tmp == 1){
+            Move1Card(deadwood, player.CardinHand, cardChose);   
             return BANG();
-        else
+        }else{
+            Move1Card(deadwood, player.CardinHand, cardChose);   
             return MISSED();
-        
+        }
+      
     }
-
-    Move1Card(deadwood, player.CardinHand, cardChose);
+    return 0;
+   
 
 }
 
@@ -69,7 +72,7 @@ void _ElGringo_(Player player_Hurt, Player player_Offense, int cardChose) {
 //能力：在抽牌階段時，第一張牌可以選擇從遊戲牌堆中或是任一位玩家的手牌中抽牌。
 //第二張則是從遊戲牌中抽牌。
 
-void _CalamityJanet_ (Player playerAs, card *deck){
+void _JesseJones_ (Player playerAs, card *deck){
     
     int tmp;
     int list[3];
@@ -114,12 +117,23 @@ void _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose) {
 
 void _KitCarlson_(Player player, card *deck) {
     
-    card *drawn[3];
+    int chose;
+    card *drawn;
     for (int i=0;i<3;i++)
-        draw(player.CardinHand, drawn[i], 1);
-    printf("Which do you want to put back in deck?\n\n");
-    for (int i=0;i<3;i++)
-        printf("[%d] %c\n", i, drawn[i]->name);
+        draw(player.CardinHand, drawn, 1);
+    printf("Which do you want to **put back** in deck?\n\n");
+    for (int i=0;i<3;i++){
+		drawn = drawn->next;
+		printf("[%d] %c ", i, drawn->name);
+	} 
+    printf("\n");
+    scanf("%d", &chose);
+
+    //Pick one card back to deck
+    Move1Card(deck, player.CardinHand, chose);
+    //Put the rest to hand
+    Move1Card(player.CardinHand, drawn, 1);
+    Move1Card(player.CardinHand, drawn, 1);
     
 }
 
@@ -128,7 +142,32 @@ void _KitCarlson_(Player player, card *deck) {
 //判定結束後抽起來的兩張都要丟棄。Ex:【酒桶】判定時，他可以抽兩張，
 //選擇一張當作要拿來判定的牌。
 
-
+void _LuckyDuke_(Player player, card *deck, card *deadwood) {
+    
+    int chose;
+    card *drawn;
+    for (int i=0;i<2;i++)
+        draw(player.CardinHand, drawn, 1);
+    printf("Which do you want to choose?\n\n");
+    for (int i=0;i<2;i++){
+		drawn = drawn->next;
+		printf("[%d] %c ", i, drawn->name);
+	} 
+    printf("\n");
+    scanf("%d", &chose);
+    card *chosen;
+    for (int i=0;i<2;i++){
+		drawn = drawn->next;
+		if (i == chose)
+            chosen = drawn;
+	} 
+    Move1Card(deadwood, drawn, 1);
+    Move1Card(deadwood, drawn, 1);
+    
+    // return chosen card
+    return  chosen;
+    
+}
 
 //////////////////////////////// IN MAIN ///////////////////////////////////////////
 //Paul Regret                                                                     //
@@ -136,7 +175,22 @@ void _KitCarlson_(Player player, card *deck) {
 ////////////////////////////////////////////////////////////////////////////////////
 
 //Pedro Ramirez
-//能力：在抽牌階段時，第一張牌可以選擇從棄牌堆或遊戲牌堆中抽牌，第二張牌只能從遊戲牌中抽牌。
+//能力：在抽牌階段時，第一張牌可以選擇從棄牌堆或遊戲牌堆中抽牌，
+//第二張牌只能從遊戲牌中抽牌。
+void _PedroRamirez_ (Player playerAs, card *deck, card *deadwood){
+    
+    int tmp;
+
+    printf("Which deck do you want to draw from?\n\n[1] Deck [2] Deadwood");
+    scanf("%d", &tmp);
+    if (tmp == 1)
+        return draw (playerAs.CardinHand, deck, 1);
+    else{
+        
+        return draw (playerAs.CardinHand, deadwood, 1);
+    }
+}
+
 
 //////////////////////////////// IN MAIN ///////////////////////////////////////////
 //Rose Doolan                                                                     //
@@ -155,7 +209,23 @@ void _SidKetchum_(Player player, card *deadwood) {
 }
 
 //Slab the Killer
-//能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，還需要再出一張【閃躲】才能真正躲過他的【Bang】。
+//能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
+//如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
+//還需要再出一張【閃躲】才能真正躲過他的【Bang】。
+
+void _SlabTheKiller_(Player player, card *deadwood) {
+    
+    if(!BANG()){
+        printf("But wait! There comes another shot!\n");
+        if(BANG()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+        
+    return 1;
+}
 
 //Suzy Lafayette
 //能力：沒手牌時，可以立即從遊戲牌庫頂抽一張牌。
@@ -175,13 +245,13 @@ void _Jourdonnais_(Player playerAs, Player playerDead, card *set[4]) {
     }
     //card set[4] = {/*Scope Card*/, /*Barrel Card*/, /*Jail Card*/, /*Bomb Card*/};
     if (board[playerDead.id].isScope)
-        Move1Card (playerAs.CardinHand, set[0], 0/*Scope Card*/);
+        Move1Card (playerAs.CardinHand, set[0], 0); //*Scope Card*
     if (board[playerDead.id].isBarrel)
-        Move1Card (playerAs.CardinHand, set[1], 1/*Barrel Card*/);
+        Move1Card (playerAs.CardinHand, set[1], 1); //*Barrel Card*
 	if (board[playerDead.id].isJail)
-        Move1Card (playerAs.CardinHand, set[2], 2/*Jail Card*/);
+        Move1Card (playerAs.CardinHand, set[2], 2); //Jail Card
     if (board[playerDead.id].isBomb)
-        Move1Card (playerAs.CardinHand, set[3], 3/*Bomb Card*/);
+        Move1Card (playerAs.CardinHand, set[3], 3); //Bomb Card
             
        
 
