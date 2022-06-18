@@ -15,6 +15,7 @@
 
 #define PLAYER_NUM 4
 
+
 int main()
 {
 	srand(time(NULL));

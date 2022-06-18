@@ -20,7 +20,7 @@ void Move1Card(card *to,card *from,int number){		//dont input empty cardset
 		pointer = pointer->next;
 	}
 	card *tail = gettail(to);
-	tail->next = pointer->next;
+	tail->next = pointer->next; 
 	tail = tail->next;
 	pointer->next = tail->next;
 	tail->next = NULL;
