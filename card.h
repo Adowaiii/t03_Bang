@@ -1,5 +1,4 @@
 #include"board.h"
-#include "stdbool.h"
 #ifndef _CARD_H_
 #define _CARD_H_
 
@@ -26,6 +25,7 @@ int DUEL(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,s
 void draw(card *to,card *from,int number);
 void CreateCard(card *pointer);
 void Move1Card(card *to,card *from,int number);
+void shuffle(card *c);
 int countCard(card *set);
 int FindCard(card *set,char *input);
 void print(card *set); 

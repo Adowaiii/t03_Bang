@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<time.h>
 
 #include"player.h"
 #include"card.h"
@@ -19,6 +20,17 @@ int countCard(card *set){
 		pointer = pointer->next;
 	}
 	return count;
+}
+
+void shuffle(card *c){
+	card *temp = malloc(sizeof(card));
+	int number;
+	while(c->next == NULL){
+		random = rand()%(countCard(c)); 
+		Move1Card(temp,c,random);
+	}
+	c->next = temp->next;
+	free(temp);
 }
 
 void print(card *set){			//請填header 
