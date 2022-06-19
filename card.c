@@ -24,8 +24,8 @@ int countCard(card *set){
 
 void shuffle(card *c){
 	card *temp = malloc(sizeof(card));
-	int number;
-	while(c->next == NULL){
+	int random;
+	while(c->next != NULL){
 		random = rand()%(countCard(c)); 
 		Move1Card(temp,c,random);
 	}
@@ -56,7 +56,7 @@ void Move1Card(card *to,card *from,int number){			//牌堆不能為空!!!
 	tail = tail->next;
 	pointer->next = tail->next;
 	tail->next = NULL;
-	printf("Moved\n");
+	//printf("Moved\n");
 }
 
 card *gettail(card *from){
@@ -79,7 +79,7 @@ void draw(card *to,card *from,int number){
 		from->next = tail->next;
 		tail->next = NULL;
 	}
-	printf("drawed\n");
+	//printf("drawed\n");
 }
 int FindCard(card *set,char *input){
 	int count=0;
@@ -169,7 +169,7 @@ int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card
 	for(int i=0;i<PLAYER_NUM;i++){
 		printf("PLAYER[%d] Which Card Do You Want To Keep?\n",user);
 		print(temp);
-		printf("...>");
+		printf("\n...>");
 		scanf("%d",&input);
 		Move1Card(set[user],temp,input);
 		if(user == 3){
@@ -558,5 +558,5 @@ void CreateCard(card *pointer){
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
 	pointer->next = NULL;
-	printf("Card Created\n");
+	//printf("Card Created\n");
 }
