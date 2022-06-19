@@ -20,6 +20,16 @@ int countCard(card *set){
 	return count;
 }
 
+void shuffle(card *c){
+	card *temp = malloc(sizeof(card));
+	int random;
+	while(c->next != NULL){
+		random = rand()%(countCard(c)); 
+		Move1Card(temp,c,random);
+	}
+	c->next = temp->next;
+	free(temp);
+}
 
 void print(card *set){			//ser = card head 
 	card *pointer = set;
@@ -43,7 +53,7 @@ void Move1Card(card *to,card *from,int number){			//dont input empty cardset
 	tail = tail->next;
 	pointer->next = tail->next;
 	tail->next = NULL;
-	printf("Moved\n");
+	//printf("Moved\n");
 }
 
 card *gettail(card *from){
@@ -546,5 +556,5 @@ void CreateCard(card *pointer){
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
 	pointer->next = NULL;
-	printf("Card Created\n");
+	//printf("Card Created\n");
 }

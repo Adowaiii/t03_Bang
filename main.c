@@ -32,6 +32,8 @@ int isDead[PLAYER_NUM];
 int distance[PLAYER_NUM][PLAYER_NUM];
 char card_name[20];
 
+int draw_card_check(int case_num, int player_id);
+
 void distance_initialize(int player_num)
 {
 	for (int i=0; i<player_num; i++)
@@ -162,6 +164,58 @@ void distance_compute(int case_num, int player_id)
 	}
 
 	return;
+}
+
+int distance_attack(int player_id)
+{
+	int bang_num = 0;
+	int bang_player;
+	int bang_available[PLAYER_NUM+1];
+	memset(bang_available, 0, sizeof(bang_available));
+	printf("Input the \"ID\" of player which you want to [Bang!]\n");
+	for (int i=0; i<PLAYER_NUM; i++)
+	{
+		if (i == player_id)
+		{
+			continue;
+		}
+
+		if (isDead[i] == 0 && Weapon_attackDistance(&weapon[player_id]) >= distance[player_id][i])
+		{
+			printf("\"%d\" Player%d\n", i+1, i+1);
+			bang_available[i+1] = 1;
+			bang_num++;
+		}
+	}
+
+	if (bang_num == 0)
+	{
+		printf("You cannot [Bang!] anyone.\n");
+		return 0;
+	}
+
+	while (1)
+	{
+		scanf("%d", &bang_player);
+		// Jourdonnais
+		if (strncmp(Character_name(&character[bang_player]), "Jourdonnais", 11) == 0)
+		{
+			if (draw_card_check(2, player_id) == 1)
+			{
+				return PLAYER_NUM+1;
+			}
+			else
+			{
+				return bang_player;
+			}
+		}
+
+		if (bang_player >= 1 && bang_player <= PLAYER_NUM && bang_available[bang_player] == 1)
+		{
+			return bang_player;
+		}
+		printf("Input the \"ID\" of player which you want to [Bang!]\n");
+	}
 }
 
 void print_board()
@@ -309,6 +363,22 @@ int draw_card_check(int case_num, int player_id)
 			}
 
 			break;
+		}
+		// Jourdonnais
+		case 2:
+		{
+			// Success
+			if (strncmp(chosen_card->suit, "HEART", 5) == 0)
+			{
+				return 1;
+			}
+			// Fail
+			else
+			{
+				return 0;
+			}
+
+			break;	
 		}
 
 		default:
@@ -603,6 +673,8 @@ int main()
 	///////* Card *///////
 	deck = malloc(sizeof(card));
 	CreateCard(deck);
+	shuffle(deck);
+	deadwood = malloc(sizeof(card));
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		HandCard[i] = malloc(sizeof(card));
@@ -731,7 +803,7 @@ int main()
 			// Jesse Jones
 			else if (strncmp(character[i].name, "Jesse Jones", 11) == 0)
 			{
-				_JesseJones_(player[i], deck, player, character, isDead);
+				//_JesseJones_(player[i], deck, player, character, isDead);
 				draw(HandCard[i], deck, 1);
 			}
 			// Kit Carlson
@@ -777,6 +849,9 @@ int main()
 						///////* Discard Check *///////
 						while (discard_check(card_num, i) == 1)
 						{
+							print_board();
+							printf("\n[Player%d Round]\n", i+1);
+
 							int discard_id;
 							print_HandCard(i);
 							printf("There are too many cards! Input the \"ID\" of card which you want to discard: ");
@@ -792,6 +867,7 @@ int main()
 								card_num--;
 								printf("Successfully discard!\n");
 							}
+							press_to_continue();
 						}
 						
 						break;
@@ -813,28 +889,93 @@ int main()
 							pointer = pointer->next;
 						}
 
+						// BANG
 						if (strncmp(pointer->name, "BANG", 4) == 0)
 						{
-							// Calamity Janet
-							if (strncmp(character[i].name, "Calamity Janet", 14) == 0)
-							{
-								
-							}
 							// Slab the Killer
-							else if (strncmp(character[i].name, "Slab the Killer", 15) == 0)
+							if (strncmp(character[i].name, "Slab the Killer", 15) == 0)
 							{
-								
+								// _SlabTheKiller_(player[i], deadwood);
 							}
+							else
+							{
+								int bang_object = distance_attack(i);
+								if (bang_object == 0 || bang_object == PLAYER_NUM+1)
+								{
+									continue;
+								}
+								else
+								{
+									BANG(board, HandCard, i, bang_object, deck, deadwood, card_id);
+								}
+							}
+							isBang = 1;
 						}
+						// MISSED
 						else if (strncmp(pointer->name, "MISSED", 6) == 0)
 						{
+/*
 							// Calamity Janet
 							if (strncmp(character[i].name, "Calamity Janet", 14) == 0)
 							{
-								
+								if (strncmp(_CalamityJanet_(player[i], "MISSED", deadwood), "MISSED", 6)
+								{
+									printf("You cannot play [Missed!] card.\n");
+								}
+								else
+								{
+									int bang_object = distance_attack(i);
+									if (bang_object == 0 || bang_object == PLAYER_NUM+1)
+									{
+										continue;
+									}
+									else
+									{
+										BANG(board, HandCard, i, bang_object, deck, deadwood, card_id);
+									}
+									isBang = 1;
+								}
 							}
+							else
+							{
+								printf("You cannot play [Missed!] card.\n");
+								continue;
+							}
+*/
 						}
-						//pointer->func();
+						// GATLING
+						else if (strncmp(pointer->name, "GATLING", 7) == 0)
+						{
+							GATLING(board, HandCard, i, 0, deck, deadwood, card_id);
+						}
+						// INDIANS
+						else if (strncmp(pointer->name, "INDIANS", 7) == 0)
+						{
+							INDIANS(board, HandCard, i, 0, deck, deadwood, card_id);
+						}
+						// PANIC
+						else if (strncmp(pointer->name, "PANIC", 5) == 0)
+						{
+							int panic_object = i;
+							while (1)
+							{
+								if (panic_object == 3)
+								{
+									panic_object = 0;
+								}
+								else
+								{
+									panic_object++;
+								}
+
+								if (isDead[panic_object] == 0)
+								{
+									break;
+								}
+							}
+							PANIC(board, HandCard, i, panic_object, deck, deadwood, card_id);
+						}
+						
 
 						// Willy the Kid
 						if (strncmp(character[i].name, "Willy the Kid", 13) == 0)
