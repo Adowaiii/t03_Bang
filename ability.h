@@ -24,7 +24,7 @@ void _Blackjack_(Player player, card *deck);
 //Calamity Janet
 //能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
 //當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
-void _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose);
+int _CalamityJanet_();
 
 
 //El Gringo
@@ -87,11 +87,6 @@ void _SlabTheKiller_(Player player, card *deadwood);
 //Suzy Lafayette
 //能力：沒手牌時，可以立即從遊戲牌庫頂抽一張牌。
 void _SuzyLafayette_(Player player, card *deck);
-
-
-//Vulture Sam
-//能力：當一位玩家死亡時，接收該死亡玩家的手牌和場上的【裝備牌】到自己的手牌中。
-void _VultureSam_(Player playerAs, Player playerDead, card *set[4], Board board[4]);
 
 
 //////////WRITE IT IN MAIN/////////

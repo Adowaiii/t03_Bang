@@ -97,7 +97,7 @@ void hurt(Board *player,int damage){
 }
 bool UseOrNot(int user,char *input){
 	int option = 1;
-	printf("PLAYER[%d] Do You Want To Use %s? 1.YES 2.NO ...>",user,input);
+	printf("PLAYER[%d] Do You Want To Use %s? 1.YES 2.NO ...>",user+1,input);
 	scanf("%d",&option);
 	if(option == 1)
 		return true;
