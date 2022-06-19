@@ -37,7 +37,7 @@ void _Blackjack_ (Player player, card *deck){
 
 }
 
-/*
+
 //Calamity Janet
 //能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
 //當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
@@ -60,7 +60,7 @@ int _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int card
     return 0;
    
 
-}*/
+}
 
 //El Gringo
 //能力：當被任一位玩家傷害時，每扣一滴血，就可以從該玩家隨機抽一張手牌。
@@ -208,7 +208,7 @@ void _PedroRamirez_ (Player playerAs, card *deck, card *deadwood){
 
     printf("Which deck do you want to draw from?\n\n\"1\" Deck \"2\" Deadwood");
     scanf("%d", &tmp);
-    while (tmp != 1 || tmp != 2){
+    while (tmp != 1 && tmp != 2){
         printf("Please enter a valid choice!\n");
         scanf("%d", &tmp);
     }
