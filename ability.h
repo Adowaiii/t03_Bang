@@ -25,7 +25,7 @@ void _Blackjack_ (Player player, card *deck);
 //Calamity Janet
 //能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
 //當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
-int _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose);
+char _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose);
 
 
 //El Gringo
@@ -43,7 +43,7 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character a
 //Jourdonnais
 //能力：內建【酒桶】功能，當被【Bang】時，可以從遊戲牌堆抽一張牌，
 //若是紅心則可以當作【閃躲】。若此角色裝備另一個【酒桶】，則可以有兩次抽牌機會。
-int _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose);
+char _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose);
 
 
 //Kit Carlson
@@ -82,7 +82,7 @@ void _SidKetchum_(Player player, card *deadwood, Board board[4]);
 //能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
 //如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
 //還需要再出一張【閃躲】才能真正躲過他的【Bang】。
-void _SlabTheKiller_(Player player, card *deadwood);
+int _SlabTheKiller_(Player player, card *deadwood);
 
 
 //Suzy Lafayette

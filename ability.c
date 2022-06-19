@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 
-int check (int i, int list[3]){
+int check(int i, int list[3]){
     if (i > 3 || i < 0)
         return 0;  
     if (list[i] == 1)
@@ -38,26 +38,25 @@ void _Blackjack_ (Player player, card *deck){
 }
 
 
+
 //Calamity Janet
 //能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
 //當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
 
-int _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose){
+char _CalamityJanet_ (Player player, char cardToChoose, card *deadwood){
 
-    if (cardToChoose->name == "MISSED" || cardToChoose->name == "BANG"){
+    if (strncmp(cardToChoose, "MISSED", 6) || strncmp(cardToChoose, "BANG", 4)){
         int tmp;
-        printf("Which card do you want to use it as?\n\n[1] BANG [2]MISSED\n");
+        printf("Which card do you want to use it as?\n\n\"1\" BANG \"2\"MISSED\n");
         scanf("%d", &tmp);
         if (tmp == 1){
-            Move1Card(deadwood, player.CardinHand, cardChose);   
-            return BANG();
-        }else{
-            Move1Card(deadwood, player.CardinHand, cardChose);   
-            return MISSED();
+            return "BANG";
+        }else{  
+            return "MISSED";
         }
       
     }
-    return 0;
+    return NULL;
    
 
 }
@@ -112,21 +111,11 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character a
     }
 }
 
-
-//Jourdonnais
-//能力：內建【酒桶】功能，當被【Bang】時，可以從遊戲牌堆抽一張牌，
-//若是紅心則可以當作【閃躲】。若此角色裝備另一個【酒桶】，則可以有兩次抽牌機會。
-/*
-int _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose) {
-    
-    draw(player.CardinHand, deck, 1);
-    if (gettail(player.CardinHand)->suit == "HEART"){
-        return MISSED();
-    }
-    Move1Card(deadwood, player.CardinHand, cardChose);
-    
-}
-*/
+///////////////////////////////// IN MAIN //////////////////////////////////////////
+//Jourdonnais                                                                     //
+//能力：內建【酒桶】功能，當被【Bang】時，可以從遊戲牌堆抽一張牌，                   //
+//若是紅心則可以當作【閃躲】。若此角色裝備另一個【酒桶】，則可以有兩次抽牌機會。      //
+////////////////////////////////////////////////////////////////////////////////////
 
 //Kit Carlson
 //能力：抽牌階段時，可以從遊戲牌堆上方拿三張起來看，選擇兩張，放回一張到遊戲牌堆頂端。
@@ -239,20 +228,21 @@ void _SidKetchum_(Player player, card *deadwood, Board board[4]) {
 //能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
 //如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
 //還需要再出一張【閃躲】才能真正躲過他的【Bang】。
-/*
-int _SlabTheKiller_(Player player, card *deadwood) {
+
+int _SlabTheKiller_(Player playerOffense, Player PlayerHurt, card *HurtPlayerCardinHand) {
     
-    if(!BANG()){
-        printf("But wait! There comes another shot!\n");
-        if(BANG()){
+    if(FindCard(HurtPlayerCardinHand, "MISSED")){
+        printf("They missed!\n");
+        printf("But wait! Here comes another shot!\n");
+        if(FindCard(HurtPlayerCardinHand, "MISSED")){
             return 1;
         }else{
             return 0;
         }
     }
         
-    return 1;
-}*/
+    return 0;
+}
 
 //Suzy Lafayette
 //能力：沒手牌時，可以立即從遊戲牌庫頂抽一張牌。
@@ -283,6 +273,7 @@ void _VultureSam_(Player playerAs, Player playerDead, card *set[4], Board board[
       
 }
 
-//////////WRITE IT IN MAIN/////////
-//Willy the Kid
-//能力：在他的回合，出【Bang】的張數沒有限制。
+/////////////////////////////////////IN MAIN////////////////////////////////////////
+//Willy the Kid                                                                   //
+//能力：在他的回合，出【Bang】的張數沒有限制。                                      //
+////////////////////////////////////////////////////////////////////////////////////
