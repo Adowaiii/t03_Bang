@@ -1,4 +1,5 @@
-#include"board.h"
+#include "board.h"
+
 #ifndef _CARD_H_
 #define _CARD_H_
 
@@ -27,11 +28,12 @@ void CreateCard(card *pointer);
 void Move1Card(card *to,card *from,int number);
 void shuffle(card *c);
 int countCard(card *set);
+int countCardName(card *set,char *name);
 int FindCard(card *set,char *input);
+int FindCardt(card *set,char *type);
 void print(card *set); 
 void hurt(Board *player,int damage);
 bool isMISSED(struct Card *set[],int user);
 card *gettail(card *from);
 
 #endif
-

@@ -91,6 +91,31 @@ int FindCard(card *set,char *input){
 	}
 	return -1;
 }
+
+int FindCardt(card *set,char *type){
+	int count=0;
+	card *pointer = set;
+	while(pointer->next != NULL){
+		count++;
+		pointer = pointer->next;
+		if(strcmp(pointer->type,type) == 0){
+			return count;
+		} 
+	}
+	return -1;
+}
+int countCardName(card *set,char *name){
+	int count=0;
+	card *pointer = set;
+	while(pointer->next != NULL){
+		count++;
+		pointer = pointer->next;
+		if(strcmp(pointer->name,input) == 0){
+			count++;
+		} 
+	}
+	return count;
+}
 //////////////////////////////////////////////////////////////////
 void hurt(Board *player,int damage){
 	player->hp -= damage;
