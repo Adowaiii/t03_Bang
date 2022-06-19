@@ -9,6 +9,13 @@
 
 #include <stdbool.h>
 
+int check (int i, int list[3]){
+    if (i > 3 || i < 0)
+        return 0;  
+    if (list[i] == 1)
+        return 1;
+    return 0;      
+}
 
 //Bart Cassidy
 //能力：被扣一滴血時，可以從卡牌堆中抽一張牌
@@ -22,11 +29,11 @@ void _BartCassidy_(Player player, card *deck) {
 //能力：在抽牌階段，必須亮出抽出的第二張牌，若該牌是紅心或方塊，他可以再多抽一張牌
 
 void _Blackjack_ (Player player, card *deck){
-
+    printf("The second card Blackjack drawn is:");
     print(gettail(player.CardinHand));
     if (gettail(player.CardinHand)->suit == "HEART"
      || gettail(player.CardinHand)->suit == "DIAMOND")
-        draw (player.CardinHand,deck, 1);
+        draw(player.CardinHand,deck, 1);
 
 }
 
@@ -69,11 +76,11 @@ void _ElGringo_(Player player_Hurt, Player player_Offense, int cardChose) {
 //第二張則是從遊戲牌中抽牌。
 
 
-void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4]){
+void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4], int isDead[4]){
 
     
     int tmp;
-    int list[3];
+    int list[3] = {0};
     printf("Which deck do you want to draw from?\n\n[1] Deck [2]Player");
     scanf("%d", &tmp);
     if (tmp == 1)
@@ -81,15 +88,25 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character a
     else{
 
         printf("Which Player's hand do you want to draw from?\n\n");
-        for(int i=0,j=0; i< 3; i++, j++){
-            if (i == playerAs.id)
+        for(int i=0; i< 3; i++){
+            if (i == playerAs.id || isDead[i] == 1)
                 continue;
-            printf("[%d] Player%d (as %s)", j, allPlayer[i].id, allCharacter[i].name);
-            list[j] = allPlayer[i].id;
+            printf("\"%d\" Player%d (as %s)", i+1, allPlayer[i].id, allCharacter[i].name);
+            list[i] = 1;
         }
         printf("\n");
         scanf("%d", &tmp);
-            draw (playerAs.CardinHand, allPlayer[list[tmp]].CardinHand, 1);
+        while (!check(tmp, list)){
+            printf("Please enter a valid choice!\n");
+            scanf("%d", &tmp);
+            if (check(tmp, list)){
+                draw(playerAs.CardinHand, allPlayer[tmp].CardinHand, 1);
+                break;
+            }
+        }
+            
+                
+           
 
         
     }
@@ -117,22 +134,31 @@ int _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose) {
 void _KitCarlson_(Player player, card *deck) {
     
     int chose;
+    int list[3];
     card *drawn;
-    for (int i=0;i<3;i++)
-        draw(player.CardinHand, drawn, 1);
+    draw(drawn, deck, 3);
     printf("Which do you want to **put back** in deck?\n\n");
     for (int i=0;i<3;i++){
 		drawn = drawn->next;
-		printf("[%d] %s ", i, drawn->name);
+		printf("\"%d\" %s ", i+1, drawn->name);
+        list[i] == 1;
 	} 
     printf("\n");
     scanf("%d", &chose);
+    while (!check(chose, list)){
+            printf("Please enter a valid choice!\n");
+            scanf("%d", &chose);
+            if (check(chose, list)){
+                //Pick one card back to deck
+                Move1Card(deck, player.CardinHand, chose);
+                //Put the rest to hand
+                Move1Card(player.CardinHand, drawn, 1);
+                Move1Card(player.CardinHand, drawn, 1);
+                break;
+            }
+        }
 
-    //Pick one card back to deck
-    Move1Card(deck, player.CardinHand, chose);
-    //Put the rest to hand
-    Move1Card(player.CardinHand, drawn, 1);
-    Move1Card(player.CardinHand, drawn, 1);
+    
     
 }
 
@@ -150,7 +176,7 @@ card _LuckyDuke_(Player player, card *deck, card *deadwood) {
     printf("Which do you want to choose?\n\n");
     for (int i=0;i<2;i++){
 		drawn = drawn->next;
-		printf("[%d] %s ", i, drawn->name);
+		printf("\"%d\" %s ", i, drawn->name);
 	} 
     printf("\n");
     scanf("%d", &chose);
@@ -180,14 +206,17 @@ void _PedroRamirez_ (Player playerAs, card *deck, card *deadwood){
     
     int tmp;
 
-    printf("Which deck do you want to draw from?\n\n[1] Deck [2] Deadwood");
+    printf("Which deck do you want to draw from?\n\n\"1\" Deck \"2\" Deadwood");
     scanf("%d", &tmp);
-    if (tmp == 1)
-        return draw (playerAs.CardinHand, deck, 1);
-    else{
-        
-        return draw (playerAs.CardinHand, deadwood, 1);
+    while (tmp != 1 || tmp != 2){
+        printf("Please enter a valid choice!\n");
+        scanf("%d", &tmp);
     }
+    if (tmp == 1)
+        draw (playerAs.CardinHand, deck, 1);
+    if (tmp == 2)
+        draw (playerAs.CardinHand, deadwood, 1);
+            
 }
 
 //////////////////////////////// IN MAIN ///////////////////////////////////////////
