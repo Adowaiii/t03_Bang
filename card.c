@@ -2,44 +2,39 @@
 #include<string.h>
 #include<stdlib.h>
 
+#include"player.h"
 #include"card.h"
 
+#define and &&
+#define or ||
+#define PLAYER_NUM 4
+	//抽牌堆 = deck
+	//棄牌堆 = deadwood 
 
-	// = deck
-	// = deadwood 
-//int main(){
-//	card *pointer,*temp;
-//	card *deck;
-//	deck = malloc(sizeof(card));
-//	card *deadwood = malloc(sizeof(card));
-//	CreateCard(deck);
-//	card *player1 = malloc(sizeof(card));
-//	draw(player1,deck,5);
-//	Move1Card(deadwood,player1,3);
-//	printf("player1:\n");
-//	print(player1); 
-//	printf("deadwood:\n");
-//	print(deadwood); 
-//	printf("deck:\n");
-//	print(deck); 
-//	
-//	
-//	//------------------------------//
-//	pointer = gettail(player1); 
-//	//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
-//	
-//}
-void print(card *set){			//ser = card head 
+int countCard(card *set){
+	int count = 0;
+	card *pointer = set;
+	while(pointer->next != NULL){
+		count++;
+		pointer = pointer->next;
+	}
+	return count;
+}
+
+void print(card *set){			//請填header 
+	int count=0;
 	card *pointer = set;
 	if(pointer->next == NULL){
 		printf("empty\n");
 	}
 	while(pointer->next != NULL){
+		count++;
 		pointer = pointer->next;
-		printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
+		printf("[%d]%15s %7s %2d\n",count,pointer->name,pointer->suit,pointer->number);
 	}
 }
-void Move1Card(card *to,card *from,int number){			//dont input empty cardset 
+
+void Move1Card(card *to,card *from,int number){			//牌堆不能為空!!! 
 	card *pointer = from;
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
@@ -74,44 +69,135 @@ void draw(card *to,card *from,int number){
 	}
 	printf("drawed\n");
 }
-
-int BANG(int player1,int player2,int z){
-	
+int FindCard(card *set,char *input){
+	int count=0;
+	card *pointer = set;
+	while(pointer->next != NULL){
+		count++;
+		pointer = pointer->next;
+		if(strcmp(pointer->name,input) == 0){
+			return count;
+		} 
+	}
+	return -1;
 }
-int MISSED(int x,int y,int z){
-	
+//////////////////////////////////////////////////////////////////
+void hurt(Board *player,int damage){
+	player->hp -= damage;
 }
-int GATLING(int x,int y,int z){
-	
+bool UseOrNot(int user,char *input){
+	int option = 1;
+	printf("PLAYER[%d] Do You Want To Use %s? 1.YES 2.NO ...>",user,input);
+	scanf("%d",&option);
+	if(option == 1)
+		return true;
+	else
+		return false;
 }
-int INDIANS(int x,int y,int z){
-	
+int BANG(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	if(isMISSED(set,enemy)){
+		Move1Card(deadwood,set[enemy],FindCard(set[enemy],"MISSED"));
+	}
+	else{
+		hurt(&board[enemy],1);
+	}
+	Move1Card(deadwood,set[user],number);
 }
-int PANIC(int x,int y,int z){
-	
+bool isMISSED(struct Card *set[],int user){
+	if(FindCard(set[user],"MISSED") != -1 and UseOrNot(user,"MISSED") == true){
+		return true;
+	}
+	return false;	
 }
-int CATBALOU(int x,int y,int z){
-	
+int GATLING(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	for(int i=0;i<PLAYER_NUM;i++){
+		if(isMISSED(set,i) and i != user){
+			Move1Card(deadwood,set[i],FindCard(set[i],"MISSED"));
+		}
+		else{
+			hurt(&board[i],1);
+		}
+	}
+	Move1Card(deadwood,set[user],number);
 }
-int STAGECOACH(int x,int y,int z){
-	
+int INDIANS(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	for(int i=0;i<PLAYER_NUM;i++){
+		if(i != user){
+			if(FindCard(set[i],"BANG") == -1){
+				hurt(&board[i],1);
+			}
+			else{
+				Move1Card(deadwood,set[i],FindCard(set[i],"BANG"));
+			} 
+		}
+	}
+	Move1Card(deadwood,set[user],number);
 }
-int WELLSFARGO(int x,int y,int z){
+int PANIC(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	
+	Move1Card(deadwood,set[user],number);
 }
-int GENERALSTORE(int x,int y,int z){
+int CATBALOU(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	
+	Move1Card(deadwood,set[user],number);
 }
-int BEER(int x,int y,int z){
-	
+int STAGECOACH(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	draw(set[user],deck,2);
+	Move1Card(deadwood,set[user],number);
 }
-int SALOON(int x,int y,int z){
-	
+int WELLSFARGO(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	draw(set[user],deck,3);
+	Move1Card(deadwood,set[user],number);
 }
-int DUEL(int x,int y,int z){
-	
+int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	Move1Card(deadwood,set[user],number);
+	card *temp = malloc(sizeof(card));
+	int input=1;
+	draw(temp,deck,PLAYER_NUM);
+	for(int i=0;i<PLAYER_NUM;i++){
+		printf("PLAYER[%d] Which Card Do You Want To Keep?\n",user);
+		print(temp);
+		printf("...>");
+		scanf("%d",&input);
+		Move1Card(set[user],temp,input);
+		if(user == 3){
+			user = 0;
+		}
+		else{
+			user++;
+		}
+	}
+	free(temp);
 }
-
+int BEER(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	hurt(&board[user],-1);
+	Move1Card(deadwood,set[user],number);
+}
+int SALOON(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	for(int i=0;i<4;i++){
+		hurt(&board[i],-1);
+	}
+	Move1Card(deadwood,set[user],number);
+}
+int DUEL(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
+	while(1){
+		if(FindCard(set[enemy],"BANG") != -1){
+			Move1Card(deadwood,set[enemy],FindCard(set[enemy],"BANG"));
+			if(FindCard(set[user],"BANG") != -1){
+				Move1Card(deadwood,set[user],FindCard(set[user],"BANG"));
+			}
+			else{
+				hurt(&board[user],1);
+				break;
+			}
+		}
+		else{
+			hurt(&board[enemy],1);
+			break;
+		}
+	}
+	Move1Card(deadwood,set[user],number);
+}
 void CreateCard(card *pointer){
 	
 	//BARREL 2
@@ -288,7 +374,6 @@ void CreateCard(card *pointer){
 		strncpy(pointer->ability,"MISSED",20);
 		strncpy(pointer->suit,"SPADE",20);
 		pointer->number = i;
-		pointer->func = &MISSED;
 		strncpy(pointer->type,"item",20);
 	}
 	for(int i=10;i<=13;i++){
@@ -298,7 +383,6 @@ void CreateCard(card *pointer){
 		strncpy(pointer->ability,"MISSED",20);
 		strncpy(pointer->suit,"CLUB",20);
 		pointer->number = i;
-		pointer->func = &MISSED;
 		strncpy(pointer->type,"item",20);
 	}
 	pointer->next = malloc(sizeof(card));//MISSED
@@ -307,7 +391,6 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"MISSED",20);
 	strncpy(pointer->suit,"CLUB",20);
 	pointer->number = 1;
-	pointer->func = &MISSED;
 	strncpy(pointer->type,"item",20);
 	//GATLING 1
 	pointer->next = malloc(sizeof(card));//GATLING
@@ -465,5 +548,3 @@ void CreateCard(card *pointer){
 	pointer->next = NULL;
 	printf("Card Created\n");
 }
-
-
