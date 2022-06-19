@@ -29,6 +29,7 @@ Mustang mustang[PLAYER_NUM];
 
 int isDead[PLAYER_NUM];
 int distance[PLAYER_NUM][PLAYER_NUM];
+char card_name[20];
 
 void distance_initialize(int player_num)
 {
@@ -60,7 +61,7 @@ void distance_initialize(int player_num)
 	return;
 }
 
-void distance_compute(int case_num, int player)
+void distance_compute(int case_num, int player_id)
 {
 	switch (case_num)
 	{
@@ -69,37 +70,90 @@ void distance_compute(int case_num, int player)
 		{
 			for (int i=0; i<PLAYER_NUM; i++)
 			{
-				if (player == i)
+				if (player_id == i)
 				{
 					continue;
 				}
 				else
 				{
-					distance[i][player]++;
+					distance[i][player_id]++;
 				}
 			}
 			break;
 		}
 	
-		// Sees other players at a distance decreased by 1.
+		// See other players at a distance decreased by 1.
 		case 1: 
 		{
 			for (int i=0; i<PLAYER_NUM; i++)
 			{
-				if (player == i)
+				if (player_id == i)
 				{
 					continue;
 				}
 				else
 				{
-					distance[player][i]--;
-					if (distance[player][i] == 0)
+					distance[player_id][i]--;
+					if (distance[player_id][i] == 0)
 					{
-						distance[player][i] = 1;
+						distance[player_id][i] = 1;
 					}
 				}
 			}
 			break;
+		}
+
+		// There's a player died, recompute the distance between players.
+		case 2:
+		{
+			for (int i=0; i<PLAYER_NUM; i++)
+			{
+				distance[i][player_id] = 0;
+				distance[player_id][i] = 0;
+			}
+
+			// Player1 Died
+			if (player_id == 0)
+			{
+				distance[player_id+1][PLAYER_NUM-1]--;
+				if (distance[player_id+1][PLAYER_NUM-1] == 0)
+				{
+					distance[player_id+1][PLAYER_NUM-1] = 1;
+				}
+				distance[PLAYER_NUM-1][player_id+1]--;
+				if (distance[PLAYER_NUM-1][player_id+1] == 0)
+				{
+					distance[PLAYER_NUM-1][player_id+1] = 1;
+				}
+			}
+			// Player4 Died
+			else if (player_id == 3)
+			{
+				distance[player_id-1][0]--;
+				if (distance[player_id-1][0] == 0)
+				{
+					distance[player_id-1][0] = 1;
+				}
+				distance[0][player_id-1]--;
+				if (distance[0][player_id-1] == 0)
+				{
+					distance[0][player_id-1] = 1;
+				}
+			}
+			// Player2 or Player3 Died
+			else
+			{
+				distance[player_id-1][player_id+1]--;
+				if (distance[player_id-1][player_id+1] == 0)
+				{
+					distance[player_id-1][player_id+1] = 1;
+				}
+				distance[player_id+1][player_id-1]--;
+				if (distance[player_id+1][player_id-1] == 0)
+				{
+					distance[player_id+1][player_id-1] = 1;
+				}
+			}
 		}
 
 		default:
@@ -197,7 +251,52 @@ int round_check(int round)
 	{
 		return -1;
 	}
+
+	return round;
 }
+
+int draw_card_check(int case_num, int player_id)
+{
+	card *temp;
+	temp = malloc(sizeof(card));
+	draw(temp, deck, 1);
+	temp = temp->next;
+
+	switch (case_num)
+	{
+		// Dynamite
+		case 0:
+		{
+			// Lucky Duke
+			if (strncmp(character[player_id].name, "Lucky Duke", 10) == 0)
+			{
+				//_LuckyDuke_(Player player, card *deck, card *deadwood);
+			}
+			else
+			{
+				// Fail
+				if (strncmp(temp->suit, "SPADE", 5) == 0 && (temp->number >= 2 && temp->number <= 9))
+				{
+					return 0;
+				}
+				// Success
+				else
+				{
+					return 1;
+				}
+			}
+			break;
+		}
+
+		default:
+			break;
+	}
+
+	Move1Card(deadwood, temp, 1);
+}
+
+				// success ---> pass the [Dynamite] to the next player, Board_isBomb(&board[i]) = 0
+				// fail ---> hp -= 3, dead_check(i, 0), put the [Dynamite] in the deadwood, Board_isBomb(&board[i]) = 0
 
 int discard_check(int card_num, int player_id)
 {
@@ -230,6 +329,20 @@ int beer_check(int player_id)
 	return 0;
 }
 
+void player_win_check(char win_group[10])
+{
+	if (strncmp(Role_roleName(&role[0]), win_group, strlen(win_group)) == 0)
+	{
+		printf("You win!\n");
+	}
+	else
+	{
+		printf("You lose!\n");
+	}
+
+	return;
+}
+
 int win_check()
 {
 	int sheriff_dead = 0;
@@ -255,20 +368,82 @@ int win_check()
 	// Sheriff Win
 	if (sheriff_dead == 0 && outlaw_dead == 2 && renegade_dead == 1)
 	{
-		printf("Sheriff Win!\n");
+		printf("The [Sheriff] wins!\n");
+		player_win_check("Sheriff");
 		return 1;
 	}
 	// Renegade Win
 	else if (sheriff_dead == 1 && outlaw_dead == 2 && renegade_dead == 0)
 	{
-		printf("Renegade Win!\n");
+		printf("The [Renegade] wins!\n");
+		player_win_check("Renegade");
 		return 1;
 	}
 	// Outlaw Win
 	else if (sheriff_dead == 1)
 	{
-		printf("Outlaw Win!\n");
+		printf("The [Outlaw] wins!\n");
+		player_win_check("Outlaw");
 		return 1;
+	}
+
+	return 0;
+}
+
+void reward(int killer_id)
+{
+	// Bomb causes the dead.
+	if (killer_id == 0)
+	{
+		return;
+	}
+	// Player causes the dead. ---> Draw 3 cards from the deck.
+	else
+	{
+		draw(HandCard[killer_id], deck, 3);
+		return;
+	}
+}
+
+int dead_check(int player_id, int killer_id)
+{
+	for (int j=0; j<PLAYER_NUM; j++)
+	{
+		while (isDead[j] == 0 && Board_hp(&board[j]) <= 0)
+		{
+			///////* Beer Check *///////
+			int beer_id = beer_check(j);
+			if (beer_id == 0)
+			{	
+				// Dead ---> Expose Role
+				isDead[j] = 1;
+				printf("Player%d is dead! The role is %s\n", j, Role_roleName(&role[j]));
+
+				///////* Win Check *///////
+				if (win_check()	== 1)
+				{
+					// A group wins. ---> End the game.
+					return 1;
+				}			
+
+				// Reward
+				reward(killer_id);
+
+				// Distance Recompute
+				distance_compute(2, j);
+
+				// Vulture Sam
+				if (strncmp(character[player_id].name, "Vulture Sam", 11) == 0)
+				{
+					
+				}
+			}
+			else
+			{
+				board[j].hp++;
+				Move1Card(deadwood, HandCard[j], beer_id);
+			}
+		}
 	}
 
 	return 0;
@@ -437,28 +612,62 @@ int main()
 		//for (int i=sheriff; i<PLAYER_NUM; i++)
 		for (int i=0; i<PLAYER_NUM; i++)
 		{
-			///////* Dead Check *///////
+			///////* Dead Check ---> Next Player *///////
 			if (isDead[i] == 1)
 			{
 				i = round_check(i);
 				continue;
 			}			
 
-			print_board(i);
+			print_board();
 			printf("\n[Player%d Round]\n", i+1);
 
 			///////* Bomb Check *///////
 			if (Board_isBomb(&board[i]) == 1)
 			{
 				printf("You have a [Dynamite].\n");
-				///// Dynamite Function /////
-				// success ---> pass the [Dynamite] to the next player, Board_isBomb(&board[i]) = 0
-				// fail ---> continue, put the [Dynamite] in the deadwood, Board_isBomb(&board[i]) = 0
-				
-				// Lucky Duke
-				if (strncmp(character[i].name, "Lucky Duke", 10) == 0)
+				// Fail
+				if (draw_card_check(0, i) == 0)
 				{
+					printf("The [Dynamite] is exploded!\n");
+					board[i].hp -= 3;
+
+					// End the game.
+					if (dead_check(i, 0) == 1)
+					{
+						return 0;
+					}
 					
+					board[i].isBomb = 0;
+					Move1Card(deadwood, EquipmentCard[i], FindCard(EquipmentCard[i], "DYNAMITE"));
+				}
+				// Success
+				else
+				{
+					printf("The [Dynamite] isn't exploded!\n");
+
+					int next_player_id = i;
+					while (1)
+					{
+						
+						if (next_player_id == 3)
+						{
+							next_player_id = 0;
+						}
+						else
+						{
+							next_player_id++;
+						}
+
+						if (isDead[next_player_id] == 0)
+						{
+							break;
+						}
+					}
+
+					Move1Card(EquipmentCard[next_player_id], EquipmentCard[i], FindCard(EquipmentCard[i], "DYNAMITE"));
+					board[i].isBomb = 0;
+					board[next_player_id].isBomb = 1;
 				}
 
 				print_board();
@@ -472,7 +681,7 @@ int main()
 				printf("You have a [Jail].\n");
 				///// Jail Function /////
 				// success ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
-				// fail ---> continue, put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
+				// fail ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
 
 				// Lucky Duke
 				if (strncmp(character[i].name, "Lucky Duke", 10) == 0)
@@ -512,7 +721,11 @@ int main()
 			{
 				
 			}
+
+			press_to_continue();
 			
+			///////* Play Cards *///////
+			int isBang = 0;
 			while (1)
 			{
 				print_board();
@@ -527,15 +740,18 @@ int main()
 					printf("Input the \"ID\" of card which you want to play or input \"0\" to skip: ");
 					scanf("%d", &card_id);
 
+					print_board();
+					printf("\n[Player%d Round]\n", i+1);
+
 					// Skip
 					if (card_id == 0)
 					{
 						///////* Discard Check *///////
-						while (discard_check(card_num, i) != 0)
+						while (discard_check(card_num, i) == 1)
 						{
 							int discard_id;
 							print_HandCard(i);
-							printf("Input the \"ID\" of card which you want to discard: ");
+							printf("There are too many cards! Input the \"ID\" of card which you want to discard: ");
 							scanf("%d", &discard_id);
 
 							if (discard_id < 0 || discard_id > card_num)
@@ -552,37 +768,57 @@ int main()
 						
 						break;
 					}
-					///////* Play Card *///////
+					// Play Card
 					else
 					{
-						int isBang = 0;
-					}
-
-					///////* Dead Check *///////
-					for (int j=0; j<PLAYER_NUM; j++)
-					{
-						while (isDead[j] == 0 && Board_hp(&board[j]) <= 0)
+						if (card_id < 0 || card_id > card_num)
 						{
-							///////* Beer Check *///////
-							int beer_id = beer_check(j);
-							if (beer_id == 0)
-							{	
-								///////* Dead ---> Expose Role ---> Reward/Penalty *///////
-								isDead[j] = 1;
-								printf("Player%d is dead! The role is %s\n", j, Role_roleName(&role[j]));
-								// Player who causes the dead.
-							}
-							else
+							printf("Invalid \"ID\"!\n");
+							press_to_continue();
+							continue;
+						}						
+
+						///// Card Function /////
+						card *pointer = HandCard[i];
+						for (int j=0; j<card_id; j++)
+						{
+							pointer = pointer->next;
+						}
+
+						if (strncmp(pointer->name, "BANG", 4) == 0)
+						{
+							// Calamity Janet
+							if (strncmp(character[i].name, "Calamity Janet", 14) == 0)
 							{
-								board[j].hp++;
-								Move1Card(deadwood, HandCard[j], beer_id);
+								
 							}
+							// Slab the Killer
+							else if (strncmp(character[i].name, "Slab the Killer", 15) == 0)
+							{
+								
+							}
+						}
+						else if (strncmp(pointer->name, "MISSED", 6) == 0)
+						{
+							// Calamity Janet
+							if (strncmp(character[i].name, "Calamity Janet", 14) == 0)
+							{
+								
+							}
+						}
+						//pointer->func();
+
+						// Willy the Kid
+						if (strncmp(character[i].name, "Willy the Kid", 13) == 0)
+						{
+							isBang = 0;
 						}
 					}
 
-					///////* Win Check *///////
-					if (win_check() == 1)
+					///////* Dead Check *///////
+					if (dead_check(i, i) == 1)
 					{
+						// End the game.
 						return 0;
 					}
 					else
@@ -598,6 +834,7 @@ int main()
 				
 				break;
 			}
+
 			break;
 
 			i = round_check(i);
