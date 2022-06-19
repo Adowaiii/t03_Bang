@@ -13,6 +13,7 @@
 #include "board.h"
 #include "weapon.h"
 #include "mustang.h"
+#include "ability.h"
 
 #define PLAYER_NUM 4
 
@@ -257,46 +258,63 @@ int round_check(int round)
 
 int draw_card_check(int case_num, int player_id)
 {
-	card *temp;
-	temp = malloc(sizeof(card));
-	draw(temp, deck, 1);
-	temp = temp->next;
+	card *chosen_card;
+	chosen_card = malloc(sizeof(card));
+	// Lucky Duke
+	if (strncmp(character[player_id].name, "Lucky Duke", 10) == 0)
+	{
+		*chosen_card = _LuckyDuke_(player[player_id], deck, deadwood);
+	}
+	else
+	{
+		card *temp;
+		temp = malloc(sizeof(card));
+		draw(temp, deck, 1);
+		chosen_card = temp;
+		Move1Card(deadwood, temp, 1);
+	}
+
+	chosen_card = chosen_card->next;
 
 	switch (case_num)
 	{
 		// Dynamite
 		case 0:
 		{
-			// Lucky Duke
-			if (strncmp(character[player_id].name, "Lucky Duke", 10) == 0)
+			// Fail
+			if (strncmp(chosen_card->suit, "SPADE", 5) == 0 && (chosen_card->number >= 2 && chosen_card->number <= 9))
 			{
-				//_LuckyDuke_(Player player, card *deck, card *deadwood);
+				return 0;
 			}
+			// Success
 			else
 			{
-				// Fail
-				if (strncmp(temp->suit, "SPADE", 5) == 0 && (temp->number >= 2 && temp->number <= 9))
-				{
-					return 0;
-				}
-				// Success
-				else
-				{
-					return 1;
-				}
+				return 1;
 			}
+
+			break;
+		}
+		// Jail
+		case 1:
+		{
+			// Success
+			if (strncmp(chosen_card->suit, "HEART", 5) == 0)
+			{
+				return 1;
+			}
+			// Fail
+			else
+			{
+				return 0;
+			}
+
 			break;
 		}
 
 		default:
 			break;
 	}
-
-	Move1Card(deadwood, temp, 1);
 }
-
-				// success ---> pass the [Dynamite] to the next player, Board_isBomb(&board[i]) = 0
-				// fail ---> hp -= 3, dead_check(i, 0), put the [Dynamite] in the deadwood, Board_isBomb(&board[i]) = 0
 
 int discard_check(int card_num, int player_id)
 {
@@ -390,19 +408,21 @@ int win_check()
 	return 0;
 }
 
-void reward(int killer_id)
+void reward(int killer_id, int dead_id)
 {
 	// Bomb causes the dead.
 	if (killer_id == 0)
 	{
 		return;
 	}
-	// Player causes the dead. ---> Draw 3 cards from the deck.
-	else
+	// Player causes the Outlaw dead. ---> Draw 3 cards from the deck.
+	else if (strncmp(Character_name(&character[dead_id]), "Outlaw", 6) == 0)
 	{
 		draw(HandCard[killer_id], deck, 3);
 		return;
 	}
+
+	return;
 }
 
 int dead_check(int player_id, int killer_id)
@@ -427,7 +447,7 @@ int dead_check(int player_id, int killer_id)
 				}			
 
 				// Reward
-				reward(killer_id);
+				reward(killer_id, j);
 
 				// Distance Recompute
 				distance_compute(2, j);
@@ -678,18 +698,23 @@ int main()
 			///////* Jail Check *///////
 			if (Board_isJail(&board[i]) == 1)
 			{
-				printf("You have a [Jail].\n");
-				///// Jail Function /////
-				// success ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
-				// fail ---> put the [Jail] in the deadwood, Board_isJail(&board[i]) = 0
-
-				// Lucky Duke
-				if (strncmp(character[i].name, "Lucky Duke", 10) == 0)
+				printf("You are in a [Jail].\n");
+				// Fail
+				if (draw_card_check(1, i) == 0)
 				{
-					
+					printf("You didn't escape from the [Jail], you have to skip this round.\n");
+					board[i].isJail = 0;
+					Move1Card(deadwood, EquipmentCard[i], FindCard(EquipmentCard[i], "JAIL"));
+					i = round_check(i);
+					continue;
 				}
-
-				//continue: i = round_check(i);
+				// Success
+				else
+				{
+					printf("You successfully escape from the [Jail]!\n");
+					board[i].isJail = 0;
+					Move1Card(deadwood, EquipmentCard[i], FindCard(EquipmentCard[i], "JAIL"));
+				}
 
 				print_board();
 				printf("\n[Player%d Round]\n", i+1);
@@ -700,26 +725,29 @@ int main()
 			// Black Jack
 			if (strncmp(character[i].name, "Black Jack", 10) == 0)
 			{
-				
+				draw(HandCard[i], deck, 2);
+				_Blackjack_(player[i], deck);
 			}
 			// Jesse Jones
 			else if (strncmp(character[i].name, "Jesse Jones", 11) == 0)
 			{
-				
+				_JesseJones_(player[i], deck, player, character, isDead);
+				draw(HandCard[i], deck, 1);
 			}
 			// Kit Carlson
 			else if (strncmp(character[i].name, "Kit Carlson", 11) == 0)
 			{
-				
+				_KitCarlson_(player[i], deck);
 			}
 			// Pedro Ramirez
 			else if (strncmp(character[i].name, "Pedro Ramirez", 13) == 0)
 			{
-				
+				_PedroRamirez_(player[i], deck, deadwood);
+				draw(HandCard[i], deck, 1);
 			}
 			else
 			{
-				
+				draw(HandCard[i], deck, 2);
 			}
 
 			press_to_continue();
@@ -824,7 +852,7 @@ int main()
 					else
 					{
 						continue;
-					}			
+					}
 				}
 				///////* AI Player: Player2, Player3, Player4 *///////
 				else
