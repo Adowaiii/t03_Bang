@@ -523,7 +523,7 @@ int main()
 					}
 
 					///////* Dead Check *///////
-					for (){}
+					//for (){}
 
 					///////* Win Check *///////
 					
