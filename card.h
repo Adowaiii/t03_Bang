@@ -30,5 +30,6 @@ void Move1Card(card *to,card *from,int number);
 void print(card *set); 
 card *gettail(card *from);
 
+
 #endif
 
