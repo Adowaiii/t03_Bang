@@ -1,3 +1,4 @@
+// Structure: Player
 #include "card.h"
 
 #ifndef _PLAYER_H_
@@ -17,6 +18,5 @@ void Player_Ctor(Player *this, int id, int BoardNum, card *CardinHand);
 int Player_GetId(Player *this);
 int Player_GetBoard(Player *this);
 void Player_GetCards(Player *this);
-
 
 #endif
