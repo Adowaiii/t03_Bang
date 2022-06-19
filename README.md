@@ -22,8 +22,6 @@ Open the terminal and input command:
 
 `make`
 
-`./main`
-
 There! You can play it on your terminal! :)
 
 ![Starting Menu](https://i.imgur.com/yrux3Xh.png)
@@ -50,7 +48,7 @@ There! You can play it on your terminal! :)
   |:---:|:---|
   |Bart Cassidy|Each time he loses a life point, he immediately draws a card from the deck.|
   |Black Jack|During drawing phase of his turn, he must show the second card he draws. If it's Heart or Diamond, he draws one additional card without revealing it.|
-  |Calamity Janet|She can use [Bang!] cards as [Missed!] cards and vice versa. If she plays a [Missed!] as a [Bang!], she cannot play another [Bang!] card that turn unless she has a [Volcanic] in play.|
+  |Calamity Janet(SHE IS NOT WORKING.DON'T PLAY HER)|She can use [Bang!] cards as [Missed!] cards and vice versa. If she plays a [Missed!] as a [Bang!], she cannot play another [Bang!] card that turn unless she has a [Volcanic] in play.|
   |El Gringo|Each time he loses a life point due to a card played by another player, he draws a random card from the hands of that player. Note that [Dynamite] damages are not caused by any player.|
   |Jesse Jones|During drawing phase of his turn, he may choose to draw the first card from the deck, or randomly from the hand of any other player. Then he draws the second card from the deck.|
   |Jourdonnais|He is considered to have a [Barrel] in play at all times; he can draw when he is the target of a [Bang!], and on a Heart he is missed. If he has another real [Barrel] card in play, he can count both of them, giving him two chances to cancel the [Bang!] before playing a [Missed!].|
