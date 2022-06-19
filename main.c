@@ -15,6 +15,10 @@
 #include "mustang.h"
 #include "ability.h"
 
+
+#define YELLOW  "\x1b[33m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
 #define PLAYER_NUM 4
 
 Player player[PLAYER_NUM];
@@ -172,7 +176,7 @@ int distance_attack(int player_id)
 	int bang_player;
 	int bang_available[PLAYER_NUM+1];
 	memset(bang_available, 0, sizeof(bang_available));
-	printf("Input the \"ID\" of player which you want to [Bang!]\n");
+	printf("Input the \"ID\" of player which you want to " YELLOW "[Bang!]" RESET  "\n");
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		if (i == player_id)
@@ -190,7 +194,7 @@ int distance_attack(int player_id)
 
 	if (bang_num == 0)
 	{
-		printf("You cannot [Bang!] anyone.\n");
+		printf("You cannot" YELLOW "[Bang!]" RESET "anyone.\n");
 		return 0;
 	}
 
@@ -215,7 +219,7 @@ int distance_attack(int player_id)
 			return bang_player;
 		}
 		printf("Invalid input!\n");
-		printf("Input the \"ID\" of player which you want to [Bang!]\n");
+		printf("Input the \"ID\" of player which you want to " YELLOW "[Bang!]" RESET "\n");
 	}
 }
 
@@ -246,10 +250,10 @@ void print_board()
 		}
 
 		// Hp
-		printf(" - Hp: %d\n", Board_hp(&board[i]));
+		printf(" - Hp: \033[1;31m%d\033[0m\n", Board_hp(&board[i]));
 
 		// Character
-		printf(" - Character: %s\n", character[i].name);
+		printf(" - Character:" CYAN " %s\n" RESET, character[i].name);
 		printf(" - Ability: %s\n", Character_ability(&character[i]));
 
 		// Equipment Card
@@ -533,7 +537,7 @@ int main()
 	////////////////////////////////////////////////////////////////////////////////
 
 	system("clear");                            
-	printf("                                                                      ====================================================                                                                      \n");
+	printf(YELLOW "                                                                      ====================================================                                                                      \n");
 	printf("                                                                      ‖    /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$  ‖\n");
 	printf("                                                                      ‖   | $$__  $$ /$$__  $$| $$$ | $$ /$$__  $$| $$  ‖\n");
 	printf("                                                                      ‖   | $$  %c $$| $$  %c $$| $$$$| $$| $$  %c__/| $$  ‖\n", 92, 92, 92);
@@ -542,10 +546,10 @@ int main()
 	printf("                                                                      ‖   | $$  %c $$| $$  | $$| $$%c  $$$| $$  %c $$      ‖\n", 92, 92, 92);
 	printf("                                                                      ‖   | $$$$$$$/| $$  | $$| $$ %c  $$|  $$$$$$/ /$$  ‖\n", 92);
 	printf("                                                                      ‖   |_______/ |__/  |__/|__/  %c__/ %c______/ |__/  ‖\n", 92, 92);
-	printf("                                                                      ====================================================\n");
+	printf("                                                                      ====================================================\n" RESET);
 	printf("\n                                                                                     - Welcome to Bang! -\n\n");
-	printf("                                                                                    ‖ Press [S] to Start‖\n");
-	printf("                                                                                    ‖ Press [E] to Exit ‖\n");
+	printf("                                                                                    ‖ Press "YELLOW "[S]" RESET" to Start‖\n");
+	printf("                                                                                    ‖ Press " YELLOW "[E]" RESET " to Exit ‖\n");
 
 	////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////  GAME SETTING  /////////////////////////////////////
@@ -884,7 +888,7 @@ int main()
 						{
 							if (isBang == 1)
 							{
-								printf("You have already used the [Bang!]\n");
+								printf("You have already used the " YELLOW "[Bang!]" RESET "\n");
 								press_to_continue();
 								continue;
 							}							
