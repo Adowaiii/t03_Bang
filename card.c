@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include"player.h"
 #include"card.h"
@@ -9,6 +10,38 @@
 #define and &&
 #define or ||
 #define PLAYER_NUM 4
+
+int countCardName(card *set, char *name)
+{
+	int count = 0;
+	card *pointer = set;
+	while (pointer->next != NULL)
+	{
+		count++;
+		pointer = pointer->next;
+		if (strcmp(pointer->name, name) == 0)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+int FindCardt(card *set, char *type)
+{
+	int count = 0;
+	card *pointer = set;
+	while (pointer->next != NULL)
+	{
+		count++;
+		pointer = pointer->next;
+		if (strcmp(pointer->type, type) == 0)
+		{
+			return count;
+		}
+	}
+	return -1;
+}
 
 int countCard(card *set){
 	int count = 0;
@@ -48,12 +81,12 @@ void Move1Card(card *to,card *from,int number){			//dont input empty cardset
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
 	}
+	printf("Moved \n");
 	card *tail = gettail(to);
 	tail->next = pointer->next;
 	tail = tail->next;
 	pointer->next = tail->next;
 	tail->next = NULL;
-	//printf("Moved\n");
 }
 
 card *gettail(card *from){
@@ -159,6 +192,7 @@ int WELLSFARGO(Board board[],struct Card *set[],int user,int enemy,struct Card *
 	draw(set[user],deck,3);
 	Move1Card(deadwood,set[user],number);
 }
+
 int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	Move1Card(deadwood,set[user],number);
 	card *temp = malloc(sizeof(card));
@@ -179,6 +213,63 @@ int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card
 	}
 	free(temp);
 }
+
+int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,struct Card *deck,struct Card *deadwood,int number, int isDead[4])
+{
+	Move1Card(deadwood, set[user], number);
+	card *temp = malloc(sizeof(card));
+	int input;
+	draw(temp, deck, alive_count);
+	for (int i=0; i<alive_count; i++)
+	{
+		if (user == 0 && isDead[i] == 0)
+		{
+			int j = 1;
+			printf("Which card do you want to keep?\n");
+			while (temp->next != NULL)
+			{
+				temp = temp->next;
+				printf("\"%d\" %s\n", j, temp->name);
+			}
+			scanf("%d", &input);
+			Move1Card(set[user], temp, input);
+		}
+		else
+		{
+			while (1)
+			{
+				if (isDead[user] == 0)
+				{
+					int card_num = countCard(temp);
+					srand(time(NULL));
+					input = rand() % card_num;
+					Move1Card(set[user], temp, input);
+					break;
+				}
+				if(user == 3)
+				{
+					user = 0;
+				}
+				else
+				{
+					user++;
+				}
+				
+			}
+		}
+
+		if(user == 3)
+		{
+			user = 0;
+		}
+		else
+		{
+			user++;
+		}
+	}
+	free(temp);
+}
+
 int BEER(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	hurt(&board[user],-1);
 	Move1Card(deadwood,set[user],number);
@@ -217,14 +308,14 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"BARREL",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 12;
-	strncpy(pointer->type,"equipment",20);
+	strncpy(pointer->type,"BARREL",20);
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"BARREL",20);
 	strncpy(pointer->ability,"BARREL",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 13;
-	strncpy(pointer->type,"equipment",20);//BARREL
+	strncpy(pointer->type,"BARREL",20);//BARREL
 	//SCOPE 1
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
@@ -232,7 +323,7 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"SCOPE",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 1;
-	strncpy(pointer->type,"equipment",20);//SCOPE
+	strncpy(pointer->type,"SCOPE",20);//SCOPE
 	//MUSTANG 2
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
@@ -240,14 +331,14 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"MUSTANG",20);
 	strncpy(pointer->suit,"HEART",20);
 	pointer->number = 8;
-	strncpy(pointer->type,"equipment",20);
+	strncpy(pointer->type,"MUSTANG",20);
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"MUSTANG",20);
 	strncpy(pointer->ability,"MUSTANG",20);
 	strncpy(pointer->suit,"HEART",20);
 	pointer->number = 9;
-	strncpy(pointer->type,"equipment",20);//MUSTANG
+	strncpy(pointer->type,"MUSTANG",20);//MUSTANG
 	//JAIL 3
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
@@ -280,14 +371,14 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"VOLCANIC",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 10;
-	strncpy(pointer->type,"equipment",20);
+	strncpy(pointer->type,"weapon",20);
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"VOLCANIC",20);
-	strncpy(pointer->ability,"VOLCANIC",20);
+	strncpy(pointer->ability,"weapon",20);
 	strncpy(pointer->suit,"CLUB",20);
 	pointer->number = 10;
-	strncpy(pointer->type,"equipment",20);//VOLCANIC
+	strncpy(pointer->type,"weapon",20);//VOLCANIC
 	//SCHOFIELD 3
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
@@ -295,7 +386,7 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"SCHOFIELD",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 13;
-	strncpy(pointer->type,"equipment",20);
+	strncpy(pointer->type,"weapon",20);
 	for(int i=11;i<=12;i++){
 		pointer->next = malloc(sizeof(card));
 		pointer = pointer->next;
@@ -303,7 +394,7 @@ void CreateCard(card *pointer){
 		strncpy(pointer->ability,"SCHOFIELD",20);
 		strncpy(pointer->suit,"CLUB",20);
 		pointer->number = i;
-		strncpy(pointer->type,"equipment",20);//SCHOFIELD
+		strncpy(pointer->type,"weapon",20);//SCHOFIELD
 	}
 	//REMINGTON 1
 	pointer->next = malloc(sizeof(card));
@@ -312,7 +403,7 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"REMINGTON",20);
 	strncpy(pointer->suit,"CLUB",20);
 	pointer->number = 13;
-	strncpy(pointer->type,"equipment",20);//REMINGTON
+	strncpy(pointer->type,"weapon",20);//REMINGTON
 	//REV.CARABINE 1
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
@@ -320,15 +411,15 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"REV.CARABINE",20);
 	strncpy(pointer->suit,"CLUB",20);
 	pointer->number = 1;
-	strncpy(pointer->type,"equipment",20);//REV.CARABINE
-	//WINCHEDTER 1
+	strncpy(pointer->type,"weapon",20);//REV.CARABINE
+	//WINCHESTER 1
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
-	strncpy(pointer->name,"WINCHEDTER",20);
-	strncpy(pointer->ability,"WINCHEDTER",20);
+	strncpy(pointer->name,"WINCHESTER",20);
+	strncpy(pointer->ability,"WINCHESTER",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 8;
-	strncpy(pointer->type,"equipment",20);//WINCHEDTER
+	strncpy(pointer->type,"weapon",20);//WINCHESTER
 	//BANG 25
 	pointer->next = malloc(sizeof(card));//BANG
 	pointer = pointer->next;

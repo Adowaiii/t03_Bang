@@ -949,7 +949,7 @@ int main()
 						{
 							INDIANS(board, HandCard, i, 0, deck, deadwood, card_id);
 						}
-						// PANIC
+						// PANIC: ~~~coming soon~~~
 						else if (strncmp(pointer->name, "PANIC", 5) == 0)
 						{
 							int panic_temp[PLAYER_NUM+1];
@@ -981,7 +981,7 @@ int main()
 								printf("Input the \"ID\" of player which you want to use [Panic!]\n");
 							}
 						}
-						// CATBALOU
+						// CATBALOU: ~~~coming soon~~~
 						else if (strncmp(pointer->name, "CATBALOU", 8) == 0)
 						{
 							int catbalou_temp[PLAYER_NUM+1];
@@ -1013,6 +1013,92 @@ int main()
 								printf("Input the \"ID\" of player which you want to use [Catbalou]\n");
 							}
 						}
+						// STAGECOACH
+						else if (strncmp(pointer->name, "STAGECOACH", 10) == 0)
+						{
+							STAGECOACH(board, HandCard, i, 0, deck, deadwood, card_id);
+						}
+						// WELLSFARGO
+						else if (strncmp(pointer->name, "WELLSFARGO", 10) == 0)
+						{
+							WELLSFARGO(board, HandCard, i, 0, deck, deadwood, card_id);
+						}
+						// GENERALSTORE
+						else if (strncmp(pointer->name, "GENERALSTORE", 12) == 0)
+						{
+							int alive_count = 0;
+							for (int j=0; j<PLAYER_NUM; j++)
+							{
+								if (isDead[j] == 0)
+								{
+									alive_count++;
+								}
+							}
+
+							GENERALSTORE_2(board, HandCard, i, alive_count, deck, deadwood, card_id, isDead);
+						}
+						// BEER
+						else if (strncmp(pointer->name, "BEER", 4) == 0)
+						{
+							if (board[i].hp == Character_hp(&character[i]))
+							{
+								printf("You cannot use [Beer], your hp are already full!\n");
+								press_to_continue;
+								continue;
+							}
+							else
+							{
+								BEER(board, HandCard, i, 0, deck, deadwood, card_id);
+							}
+						}
+						// SALOOW
+						else if (strncmp(pointer->name, "SALOOW", 6) == 0)
+						{
+							for (int j=0; j<PLAYER_NUM; j++)
+							{
+								if (isDead[j] == 1 || board[j].hp == Character_hp(&character[j]))
+								{
+									continue;
+								}
+								else
+								{
+									BEER(board, HandCard, j, 0, deck, deadwood, card_id);
+								}
+							}
+							Move1Card(deadwood, HandCard[i], card_id);
+						}
+						// DUEL
+						else if (strncmp(pointer->name, "DUEL", 4) == 0)
+						{
+							int duel_temp[PLAYER_NUM+1];
+							memset(duel_temp, 0, sizeof(duel_temp));
+							printf("Input the \"ID\" of player which you want to use [Duel]\n");
+							for (int j=0; j<PLAYER_NUM; j++)
+							{
+								if (i == j)
+								{
+									continue;
+								}
+								if (isDead[j] == 0)
+								{
+									printf("\"%d\" Player%d\n", j+1, j+1);
+									duel_temp[j+1] = 1;
+								}
+							}
+
+							int duel_object;
+							while(1)
+							{
+								scanf("%d", &duel_object);
+								if (duel_object >= 1 && duel_object <= PLAYER_NUM && duel_temp[duel_object] == 1)
+								{
+									DUEL(board, HandCard, i, duel_object-1, deck, deadwood, card_id);
+									break;
+								}
+								printf("Invalid input!\n");
+								printf("Input the \"ID\" of player which you want to use [Duel]\n");
+							}
+						}
 
 						// Willy the Kid
 						if (strncmp(character[i].name, "Willy the Kid", 13) == 0)
@@ -1042,11 +1128,10 @@ int main()
 			///////* AI Player: Player2, Player3, Player4 *///////
 			else
 			{
-
+			
 			}
-		}
-
 		break;
+		}
 	}
 
 	return 0;
