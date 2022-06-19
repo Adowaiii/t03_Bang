@@ -1,8 +1,5 @@
 
 #include "player.h"
-
-
-// 父類建構函式實現
 void Player_Ctor(Player *this, int id, int BoardNum, card *CardinHand)
 {
     this->id = id;
@@ -24,4 +21,3 @@ void Player_GetCards(Player *this)
 {
 	return print(this->CardinHand);
 }
-

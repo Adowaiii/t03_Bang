@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -19,13 +18,13 @@ void _BartCassidy_(Player player, card *deck);
 
 //Black Jack
 //能力：在抽牌階段，必須亮出抽出的第二張牌，若該牌是紅心或方塊，他可以再多抽一張牌
-void _Blackjack_ (Player player, card *deck);
+void _Blackjack_(Player player, card *deck);
 
 
 //Calamity Janet
 //能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
 //當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
-char _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose);
+void _CalamityJanet_ (Player player, card *cardToChoose, card *deadwood, int cardChose);
 
 
 //El Gringo
@@ -37,13 +36,13 @@ void _ElGringo_(Player player_Hurt, Player player_Offense, int cardChose);
 //Jesse Jones
 //能力：在抽牌階段時，第一張牌可以選擇從遊戲牌堆中或是任一位玩家的手牌中抽牌。
 //第二張則是從遊戲牌中抽牌。
-void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4]);
+void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4], int isDead[4]);
 
 
 //Jourdonnais
 //能力：內建【酒桶】功能，當被【Bang】時，可以從遊戲牌堆抽一張牌，
 //若是紅心則可以當作【閃躲】。若此角色裝備另一個【酒桶】，則可以有兩次抽牌機會。
-char _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose);
+void _Jourdonnais_(Player player, card *deadwood, card *deck, int cardChose);
 
 
 //Kit Carlson
@@ -82,7 +81,7 @@ void _SidKetchum_(Player player, card *deadwood, Board board[4]);
 //能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
 //如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
 //還需要再出一張【閃躲】才能真正躲過他的【Bang】。
-int _SlabTheKiller_(Player player, card *deadwood);
+void _SlabTheKiller_(Player player, card *deadwood);
 
 
 //Suzy Lafayette
