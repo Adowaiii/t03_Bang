@@ -118,7 +118,108 @@ idV{陣營勝利判定}-->|YES|id000([End])
 idV{陣營勝利判定}-->|NO|id16
 id24-->|YES|id25(棄牌到剩餘血量)-->id8
 ```
-### Work Log
+
+## Code Overview
+
+### Structure
+
+README.md  
+Bang/  
+├─ Makefile  
+├─ main  
+├─ ability  
+├─ board  
+├─ card  
+├─ character  
+├─ mustang  
+├─ player  
+├─ role  
+├─ weapon
+
+### Object
+
+- 玩家：Player
+	```c
+	typedef struct{
+		int id;
+		int BoardNum;
+		card *CardinHand;
+	} Player;
+	```
+- 遊戲板：Board
+	```c
+	typedef struct{
+		int id;
+		int hp;
+		Role role;
+		Weapon weapon;
+		Mustang mustang;
+		bool isScope;
+		bool isBarrel;
+		bool isJail;
+		bool isBomb;
+	} Board;
+	```
+- 角色：Character
+	```c
+	typedef struct{
+		char *name;
+		int hp;
+		char *ability;
+	} Character;
+	```
+- 身分：Role
+	```c
+	typedef struct{
+		char *roleName;
+		char *object;
+	} Role;
+	```
+- 卡牌： Card
+	```c
+	typedef struct Card{
+		char suit[20];
+		int number;
+		char type[20];
+		char name[20];
+		char ability[20];
+		int (*func)(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,
+			struct Card *deadwood,int number);
+		struct Card *next;
+	}card;
+	```
+- 武器：Weapon
+	```c
+	typedef struct{
+		int weaponId;
+		int attackDistance;
+		bool isVolcanic;
+	} Weapon;
+
+	```
+- 野馬：Mustang
+	```c
+	typedef struct{
+		int mustangId;
+	} Mustang;
+	```
+### Ability
+- 能力：Character Ability
+	```c
+	void _<character_name>_ {
+          ...
+	}
+
+	```
+- 消耗：Item
+	```=c
+	int <item_name> {
+	 ...
+	}
+	```
+
+
+## Work Log
 #### 6/14
 - Plan out Basic Outline
 
