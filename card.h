@@ -1,4 +1,5 @@
 #include"board.h"
+#include "stdbool.h"
 #ifndef _CARD_H_
 #define _CARD_H_
 
