@@ -37,6 +37,7 @@ void print(card *set){			//ser = card head
 		printf("empty");
 	}
 	while(pointer->next != NULL){
+		count++;
 		pointer = pointer->next;
 		printf("%s  ",pointer->name);
 		//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
