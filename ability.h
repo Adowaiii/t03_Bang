@@ -55,7 +55,7 @@ void _KitCarlson_(Player player, card *deck);
 //能力：當發生判定需要抽牌時，他可以抽兩張，並選擇一張當要判定的牌，
 //判定結束後抽起來的兩張都要丟棄。Ex:【酒桶】判定時，他可以抽兩張，
 //選擇一張當作要拿來判定的牌。
-void _LuckyDuke_(Player player, card *deck, card *deadwood);
+card _LuckyDuke_(Player player, card *deck, card *deadwood);
 
 
 //////////////////////////////// IN MAIN ///////////////////////////////////////////
