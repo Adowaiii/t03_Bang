@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<stdbool.h>
+#include <stdbool.h>
 
 #include"player.h"
 #include"card.h"
@@ -9,8 +9,6 @@
 #define and &&
 #define or ||
 #define PLAYER_NUM 4
-	//抽牌堆 = deck
-	//棄牌堆 = deadwood 
 
 int countCard(card *set){
 	int count = 0;
@@ -22,30 +20,40 @@ int countCard(card *set){
 	return count;
 }
 
-void print(card *set){			//請填header 
-	int count=0;
-	card *pointer = set;
-	if(pointer->next == NULL){
-		printf("empty\n");
+void shuffle(card *c){
+	card *temp = malloc(sizeof(card));
+	int random;
+	while(c->next != NULL){
+		random = rand()%(countCard(c)); 
+		Move1Card(temp,c,random);
 	}
-	while(pointer->next != NULL){
-		count++;
-		pointer = pointer->next;
-		printf("[%d]%15s %7s %2d\n",count,pointer->name,pointer->suit,pointer->number);
-	}
+	c->next = temp->next;
+	free(temp);
 }
 
-void Move1Card(card *to,card *from,int number){			//牌堆不能為空!!! 
+void print(card *set){			//ser = card head 
+	card *pointer = set;
+	if(pointer->next == NULL){
+		printf("empty");
+	}
+	while(pointer->next != NULL){
+		pointer = pointer->next;
+		printf("%s  ",pointer->name);
+		//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
+	}
+	printf("\n");
+}
+void Move1Card(card *to,card *from,int number){			//dont input empty cardset 
 	card *pointer = from;
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
 	}
 	card *tail = gettail(to);
-	tail->next = pointer->next; 
+	tail->next = pointer->next;
 	tail = tail->next;
 	pointer->next = tail->next;
 	tail->next = NULL;
-	printf("Moved\n");
+	//printf("Moved\n");
 }
 
 card *gettail(card *from){
@@ -547,5 +555,5 @@ void CreateCard(card *pointer){
 	pointer->func = &DUEL;
 	strncpy(pointer->type,"item",20);
 	pointer->next = NULL;
-	printf("Card Created\n");
+	//printf("Card Created\n");
 }

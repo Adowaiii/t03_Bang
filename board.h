@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "role.h"
 #include "weapon.h"
 #include "mustang.h"

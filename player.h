@@ -1,4 +1,3 @@
-// Structure: Player
 #include "card.h"
 
 #ifndef _PLAYER_H_
@@ -11,9 +10,7 @@ typedef struct
     card *CardinHand;
 } Player;
 
-// 建構函式宣告
 void Player_Ctor(Player *this, int id, int BoardNum, card *CardinHand);
-
 
 int Player_GetId(Player *this);
 int Player_GetBoard(Player *this);
