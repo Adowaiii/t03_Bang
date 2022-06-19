@@ -236,7 +236,7 @@ void _SlabTheKiller_(Player player, card *deadwood) {
 //Suzy Lafayette
 //能力：沒手牌時，可以立即從遊戲牌庫頂抽一張牌。
 
-void _Jourdonnais_(Player player, card *deck) {
+void _SuzyLafayette_(Player player, card *deck) {
     if (player.CardinHand == NULL){
         draw(player.CardinHand, deck, 1);
     }
@@ -245,7 +245,7 @@ void _Jourdonnais_(Player player, card *deck) {
 //Vulture Sam
 //能力：當一位玩家死亡時，接收該死亡玩家的手牌和場上的【裝備牌】到自己的手牌中。
 
-void _Jourdonnais_(Player playerAs, Player playerDead, card *set[4], Board board[4]) {
+void _VultureSam_(Player playerAs, Player playerDead, card *set[4], Board board[4]) {
     while(playerDead.CardinHand != NULL){
         Move1Card (playerAs.CardinHand, playerDead.CardinHand, 1);
     }
