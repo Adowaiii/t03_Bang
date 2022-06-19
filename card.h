@@ -1,5 +1,5 @@
 
-
+#include "board.h"
 #ifndef _CARD_H_
 #define _CARD_H_
 
@@ -9,11 +9,11 @@ typedef struct Card{
 	char type[20];
 	char name[20];
 	char ability[20];
-	int (*func)(int,int,int);
+	int (*func)(Board,Board,int);
 	struct Card *next;
 	}card;
 	
-int BANG(int,int,int);
+int BANG(Board,int,int);
 int MISSED(int,int,int);
 int GATLING(int,int,int);
 int INDIANS(int,int,int);

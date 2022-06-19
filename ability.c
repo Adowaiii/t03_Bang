@@ -5,11 +5,17 @@
 #include "player.h"
 #include "card.h"
 #include "character.h"
+#include "ability.h"
 #include <stdbool.h>
 
-Character character[4];
-Player player[4];
-Board board[4];
+
+void MISSED(){
+    return 0;
+}
+
+bool BANG(){
+    return 0;
+}
 
 //Bart Cassidy
 //能力：被扣一滴血時，可以從卡牌堆中抽一張牌
@@ -72,7 +78,7 @@ void _ElGringo_(Player player_Hurt, Player player_Offense, int cardChose) {
 //能力：在抽牌階段時，第一張牌可以選擇從遊戲牌堆中或是任一位玩家的手牌中抽牌。
 //第二張則是從遊戲牌中抽牌。
 
-void _JesseJones_ (Player playerAs, card *deck){
+void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4]){
     
     int tmp;
     int list[3];
@@ -86,12 +92,12 @@ void _JesseJones_ (Player playerAs, card *deck){
         for(int i=0,j=0; i< 3; i++, j++){
             if (i == playerAs.id)
                 continue;
-            printf("[%d] Player%d (as %c)", j, player[i].id, character[i].name);
-            list[j] = player[i].id;
+            printf("[%d] Player%d (as %c)", j, allPlayer[i].id, allCharacter[i].name);
+            list[j] = allPlayer[i].id;
         }
         printf("\n");
         scanf("%d", &tmp);
-            return draw (playerAs.CardinHand, player[list[tmp]].CardinHand, 1);
+            return draw (playerAs.CardinHand, allPlayer[list[tmp]].CardinHand, 1);
         
     }
 }
@@ -200,7 +206,7 @@ void _PedroRamirez_ (Player playerAs, card *deck, card *deadwood){
 //Sid Ketchum
 //能力：任何時刻都可以丟棄兩張卡牌，替自己補一滴血，且次數不限。
 
-void _SidKetchum_(Player player, card *deadwood) {
+void _SidKetchum_(Player player, card *deadwood, Board board[4]) {
     
     Move1Card(deadwood, gettail(player.CardinHand), 2);
     board[player.id].hp++;
@@ -239,9 +245,9 @@ void _Jourdonnais_(Player player, card *deck) {
 //Vulture Sam
 //能力：當一位玩家死亡時，接收該死亡玩家的手牌和場上的【裝備牌】到自己的手牌中。
 
-void _Jourdonnais_(Player playerAs, Player playerDead, card *set[4]) {
+void _Jourdonnais_(Player playerAs, Player playerDead, card *set[4], Board board[4]) {
     while(playerDead.CardinHand != NULL){
-        Move1Card (playerAs.CardinHand, playerDead.CardinHand);
+        Move1Card (playerAs.CardinHand, playerDead.CardinHand, 1);
     }
     //card set[4] = {/*Scope Card*/, /*Barrel Card*/, /*Jail Card*/, /*Bomb Card*/};
     if (board[playerDead.id].isScope)
@@ -254,7 +260,7 @@ void _Jourdonnais_(Player playerAs, Player playerDead, card *set[4]) {
         Move1Card (playerAs.CardinHand, set[3], 3); //Bomb Card
             
        
-
+}
 //////////WRITE IT IN MAIN/////////
 //Willy the Kid
 //能力：在他的回合，出【Bang】的張數沒有限制。

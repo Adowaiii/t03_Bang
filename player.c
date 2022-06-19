@@ -20,9 +20,8 @@ int Player_GetBoard(Player *this)
 	return this->BoardNum;
 }
 
-void Player_GetCards(Player *this){
-		
-    return print(this->CardinHand);
+void Player_GetCards(Player *this)
+{
+	return print(this->CardinHand);
 }
-
 
