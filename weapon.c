@@ -34,7 +34,7 @@ bool Weapon_isVolcanic(Weapon *this)
 // [Winchedter] 79
 // [Default] 80
 int weapon_id[8] = {72, 73, 74, 75, 76, 77, 78, 79};
-char weapon_database[8][15] = {"Volcanic", "Volcanic", "Schofield", "Schofield", "Schofield", "Remington", "Rev.Carabine", "Winchedter"};
+char weapon_database[8][15] = {"Volcanic", "Volcanic", "Schofield", "Schofield", "Schofield", "Remington", "Rev.Carabine", "Winchester"};
 char weapon_function[8][100] = {"The attacking distance is 1, and you can play any number of [Bang] cards during your turn.",
 				"The attacking distance is 1, and you can play any number of [Bang] cards during your turn.",
 				"The attacking distance is 2.",

@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include"player.h"
 #include"card.h"
@@ -9,6 +10,38 @@
 #define and &&
 #define or ||
 #define PLAYER_NUM 4
+
+int countCardName(card *set, char *name)
+{
+	int count = 0;
+	card *pointer = set;
+	while (pointer->next != NULL)
+	{
+		count++;
+		pointer = pointer->next;
+		if (strcmp(pointer->name, name) == 0)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+int FindCardt(card *set, char *type)
+{
+	int count = 0;
+	card *pointer = set;
+	while (pointer->next != NULL)
+	{
+		count++;
+		pointer = pointer->next;
+		if (strcmp(pointer->type, type) == 0)
+		{
+			return count;
+		}
+	}
+	return -1;
+}
 
 int countCard(card *set){
 	int count = 0;
@@ -37,7 +70,6 @@ void print(card *set){			//ser = card head
 		printf("empty");
 	}
 	while(pointer->next != NULL){
-		count++;
 		pointer = pointer->next;
 		printf("%s  ",pointer->name);
 		//printf("%15s %7s %2d\n",pointer->name,pointer->suit,pointer->number);
@@ -79,6 +111,7 @@ void draw(card *to,card *from,int number){
 	}
 	//printf("drawed\n");
 }
+
 int FindCard(card *set,char *input){
 	int count=0;
 	card *pointer = set;
@@ -159,6 +192,7 @@ int WELLSFARGO(Board board[],struct Card *set[],int user,int enemy,struct Card *
 	draw(set[user],deck,3);
 	Move1Card(deadwood,set[user],number);
 }
+
 int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	Move1Card(deadwood,set[user],number);
 	card *temp = malloc(sizeof(card));
@@ -179,6 +213,63 @@ int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card
 	}
 	free(temp);
 }
+
+int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,struct Card *deck,struct Card *deadwood,int number, int isDead[4])
+{
+	Move1Card(deadwood, set[user], number);
+	card *temp = malloc(sizeof(card));
+	int input;
+	draw(temp, deck, alive_count);
+	for (int i=0; i<alive_count; i++)
+	{
+		if (user == 0 && isDead[i] == 0)
+		{
+			int j = 1;
+			printf("Which card do you want to keep?\n");
+			while (temp->next != NULL)
+			{
+				temp = temp->next;
+				printf("\"%d\" %s\n", j, temp->name);
+			}
+			scanf("%d", &input);
+			Move1Card(set[user], temp, input);
+		}
+		else
+		{
+			while (1)
+			{
+				if (isDead[user] == 0)
+				{
+					int card_num = countCard(temp);
+					srand(time(NULL));
+					input = rand() % card_num;
+					Move1Card(set[user], temp, input);
+					break;
+				}
+				if(user == 3)
+				{
+					user = 0;
+				}
+				else
+				{
+					user++;
+				}
+				
+			}
+		}
+
+		if(user == 3)
+		{
+			user = 0;
+		}
+		else
+		{
+			user++;
+		}
+	}
+	free(temp);
+}
+
 int BEER(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	hurt(&board[user],-1);
 	Move1Card(deadwood,set[user],number);
@@ -280,7 +371,7 @@ void CreateCard(card *pointer){
 	strncpy(pointer->ability,"VOLCANIC",20);
 	strncpy(pointer->suit,"SPADE",20);
 	pointer->number = 10;
-	strncpy(pointer->type,"equipment",20);
+	strncpy(pointer->type,"weapon",20);
 	pointer->next = malloc(sizeof(card));
 	pointer = pointer->next;
 	strncpy(pointer->name,"VOLCANIC",20);

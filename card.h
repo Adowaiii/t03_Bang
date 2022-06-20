@@ -1,4 +1,5 @@
-#include"board.h"
+#include "board.h"
+
 #ifndef _CARD_H_
 #define _CARD_H_
 
@@ -17,6 +18,8 @@ int GATLING(Board board[],struct Card *set[],int user,int enemy,struct Card *dec
 int INDIANS(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
 int PANIC(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
 int CATBALOU(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
+int GENERALSTORE(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
+int GENERALSTORE_2(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number, int isDead[4]);
 int STAGECOACH(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
 int WELLSFARGO(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
 int BEER(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number);
@@ -32,5 +35,7 @@ void print(card *set);
 void hurt(Board *player,int damage);
 bool isMISSED(struct Card *set[],int user);
 card *gettail(card *from);
+int FindCardt(card *set, char *type);
+int countCardName(card *set, char *name);
 
 #endif
