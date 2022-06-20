@@ -154,8 +154,10 @@ bool isMISSED(struct Card *set[],int user){
 }
 int GATLING(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	for(int i=0;i<PLAYER_NUM;i++){
-		if(isMISSED(set,i) and i != user){
-			Move1Card(deadwood,set[i],FindCard(set[i],"MISSED"));
+		if(i != user){
+			if (isMISSED(set,i)){
+				Move1Card(deadwood,set[i],FindCard(set[i],"MISSED"));
+			}
 		}
 		else{
 			hurt(&board[i],1);
@@ -218,6 +220,7 @@ int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,str
 {
 	Move1Card(deadwood, set[user], number);
 	card *temp = malloc(sizeof(card));
+	temp->next = NULL;
 	int input;
 	draw(temp, deck, alive_count);
 	for (int i=0; i<alive_count; i++)
