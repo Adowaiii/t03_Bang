@@ -62,7 +62,7 @@ There! You can play it on your terminal! :)
   |Rose Doolan|She is considered to have a [Scope] in play at all times; she sees other players at a distance decreased by 1. If she has another real [Scope] in play, she can count both of them, reducing her distance to all other players by a total of 2.|
   |Sid Ketchum`(NOT WORKING)`|At any time, he may discard 2 cards from his hand to regain one life point. If he is willing and able, he can use this ability more than once at a time.|
   |Slab the Killer|Players trying to cancel his [Bang!] cards need to play 2 [Missed!]. The [Barrel] effect, if successfully used, only counts as one [Missed!].|
-  |Suzy Lafayette|As soon as she has no cards in her hand, she draws a card from the draw pile.|
+  |Suzy Lafayette(`WORKING`)|As soon as she has no cards in her hand, she draws a card from the draw pile.|
   |Vulture Sam|Whenever a character is eliminated from the game, he takes all the cards that player had in his hand and in play, and adds them to his hand.|
   |Willy the Kid|He can play any number of [Bang!] cards during his turn.|
 
