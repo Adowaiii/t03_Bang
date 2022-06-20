@@ -253,7 +253,7 @@ void print_board()
 		}
 
 		// Hp
-		printf(" - Hp: \033[1;31m%d\033[0m", Board_hp(&board[i]));
+		printf(" - Hp: \033[1;31m%d\033[0m\n", Board_hp(&board[i]));
 
 		// Character
 		printf(" - Character:" CYAN " %s\n" RESET, character[i].name);
