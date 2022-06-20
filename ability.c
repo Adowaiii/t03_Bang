@@ -76,19 +76,19 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character a
     else{
 
         printf("Which Player's hand do you want to draw from?\n\n");
-        for(int i=0; i< 3; i++){
+        for(int i=0; i<4; i++){
             if (i == playerAs.id || isDead[i] == 1)
                 continue;
-            printf("\"%d\" Player%d (as %s)", i+1, allPlayer[i].id, allCharacter[i].name);
+            printf("\"%d\" Player%d\n", i+1, i+1);
             list[i] = 1;
         }
         printf("\n");
         scanf("%d", &tmp);
-        while (!check(tmp, list)){
+        while (!check(tmp-1, list)){
             printf("Please enter a valid choice!\n");
             scanf("%d", &tmp);
-            if (check(tmp, list)){
-                draw(playerAs.CardinHand, allPlayer[tmp].CardinHand, 1);
+            if (check(tmp-1, list)){
+                draw(playerAs.CardinHand, allPlayer[tmp-1].CardinHand, 1);
                 break;
             }
         }
@@ -112,12 +112,12 @@ void _KitCarlson_(Player player, card *deck) {
 	} 
     printf("\n");
     scanf("%d", &chose);
-    while (!check(chose, list)){
+    while (!check(chose-1, list)){
             printf("Please enter a valid choice!\n");
             scanf("%d", &chose);
-            if (check(chose, list)){
+            if (check(chose-1, list)){
                 //Pick one card back to deck
-                Move1Card(deck, player.CardinHand, chose);
+                Move1Card(deck, drawn, chose);
                 //Put the rest to hand
                 Move1Card(player.CardinHand, drawn, 1);
                 Move1Card(player.CardinHand, drawn, 1);
