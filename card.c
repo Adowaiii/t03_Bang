@@ -130,8 +130,13 @@ void hurt(Board *player,int damage){
 }
 bool UseOrNot(int user,char *input){
 	int option = 1;
-	printf("PLAYER[%d] Do You Want To Use %s? 1.YES 2.NO ...>",user+1,input);
-	scanf("%d",&option);
+	if(user == 0){
+		printf("PLAYER[%d] Do You Want To Use %s? 1.YES 2.NO ...>",user+1,input);
+	}
+	
+	if(user == 0){
+		scanf("%d",&option);
+	}
 	if(option == 1)
 		return true;
 	else
@@ -155,13 +160,14 @@ bool isMISSED(struct Card *set[],int user){
 int GATLING(Board board[],struct Card *set[],int user,int enemy,struct Card *deck,struct Card *deadwood,int number){
 	for(int i=0;i<PLAYER_NUM;i++){
 		if(i != user){
-			if (isMISSED(set,i)){
+			if(isMISSED(set,i)){
 				Move1Card(deadwood,set[i],FindCard(set[i],"MISSED"));
 			}
+			else{
+				hurt(&board[i],1);
+			}
 		}
-		else{
-			hurt(&board[i],1);
-		}
+			
 	}
 	Move1Card(deadwood,set[user],number);
 }
@@ -220,7 +226,6 @@ int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,str
 {
 	Move1Card(deadwood, set[user], number);
 	card *temp = malloc(sizeof(card));
-	temp->next = NULL;
 	int input;
 	draw(temp, deck, alive_count);
 	for (int i=0; i<alive_count; i++)
