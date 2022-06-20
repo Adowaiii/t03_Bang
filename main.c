@@ -68,6 +68,7 @@ void distance_compute(int case_num, int player_id)
 {
 	switch (case_num)
 	{
+		// Mustang1
 		// All other players add 1 to the distance.
 		case 0:
 		{
@@ -85,6 +86,7 @@ void distance_compute(int case_num, int player_id)
 			break;
 		}
 	
+		// Scope, Mustang2
 		// See other players at a distance decreased by 1.
 		case 1: 
 		{
@@ -984,7 +986,7 @@ int main()
 							}
 						}
 						// CATBALOU: ~~~coming soon~~~
-						else if (strncmp(pointer->name, "CAT BALOU", 8) == 0)
+						else if (strncmp(pointer->name, "CAT BALOU", 9) == 0)
 						{
 							int catbalou_temp[PLAYER_NUM+1];
 							memset(catbalou_temp, 0, sizeof(catbalou_temp));
@@ -1021,7 +1023,7 @@ int main()
 							STAGECOACH(board, HandCard, i, 0, deck, deadwood, card_id);
 						}
 						// WELLSFARGO
-						else if (strncmp(pointer->name, "WELLS FARGO", 10) == 0)
+						else if (strncmp(pointer->name, "WELLS FARGO", 11) == 0)
 						{
 							WELLSFARGO(board, HandCard, i, 0, deck, deadwood, card_id);
 						}
@@ -1050,8 +1052,8 @@ int main()
 							}
 							else
 							{
-								board[i].hp++;							
 								//BEER(board, HandCard, i, 0, deck, deadwood, card_id);
+								board[i].hp++;
 							}
 							Move1Card(deadwood, HandCard[i], card_id);
 						}
@@ -1066,8 +1068,7 @@ int main()
 								}
 								else
 								{
-									board[j].hp++;						
-									//BEER(board, HandCard, j, 0, deck, deadwood, card_id);
+									board[j].hp++;
 								}
 							}
 							Move1Card(deadwood, HandCard[i], card_id);
@@ -1104,9 +1105,165 @@ int main()
 								printf("Input the \"ID\" of player which you want to use [Duel]\n");
 							}
 						}
+						// BARREL
+						else if (strncmp(pointer->name, "BARREL", 6) == 0)
+						{
+							if (board[i].isBarrel == 1)
+							{
+								char answer[1];
+								printf("You already have [Barrel], do you want to discard it?\n");
+								printf("\"Y\" Yes\n\"N\" No\n");
 
-						// Willy the Kid
-						if (strncmp(character[i].name, "Willy the Kid", 13) == 0)
+								while (1)
+								{
+									scanf("%c", &answer[0]);
+									if (strncmp(answer, "Y", 1) == 0 || strncmp(answer, "y", 1) == 0)
+									{
+										int temp = FindCard(EquipmentCard[i], "BAREL");
+										Move1Card(deadwood, EquipmentCard[i], temp);
+										Move1Card(EquipmentCard[i], HandCard[i], card_id);
+										break;
+									}
+									else if (strncmp(answer, "N", 1) == 0 || strncmp(answer, "n", 1) == 0)
+									{
+										break;
+									}
+									printf("Invalid input!\n");
+									printf("Do you want to discard the [Barrel] card?\n");
+								}
+							}
+							else
+							{
+								int temp = FindCard(EquipmentCard[i], "BAREL");
+								Move1Card(deadwood, EquipmentCard[i], temp);
+								Move1Card(EquipmentCard[i], HandCard[i], card_id);
+								board[i].isBarrel = 1;
+							}
+						}
+						// SCOPE
+						else if (strncmp(pointer->name, "SCOPE", 5) == 0)
+						{
+							Move1Card(EquipmentCard[i], HandCard[i], card_id);
+							distance_compute(0, i);
+							board[i].isScope = 1;
+						}
+/*
+						// MUSTANG
+						else if (strncmp(pointer->name, "MUSTANG", 7) == 0)
+						{
+							char answer[1];
+							printf("You already have [Mustang], do you want to discard it?\n");
+							printf("\"Y\" Yes\n\"N\" No\n");
+
+							while (1)
+							{
+								scanf("%c", &answer[0]);
+								if (strncmp(answer, "Y", 1) == 0 || strncmp(answer, "y", 1) == 0)
+								{
+									int temp = FindCard(EquipmentCard[i], "MUSTANG");
+									Move1Card(deadwood, EquipmentCard[i], temp);
+									Move1Card(EquipmentCard[i], HandCard[i], card_id);
+									break;
+								}
+								else if (strncmp(answer, "N", 1) == 0 || strncmp(answer, "n", 1) == 0)
+								{
+									break;
+								}
+								printf("Invalid input!\n");
+								printf("Do you want to discard the [Mustang] card?\n");
+							}
+							else
+							{
+								// 
+								if ()
+								{
+									
+								}
+								else if ()
+								{
+									
+								}
+								int temp = FindCard(EquipmentCard[i], "BAREL");
+								Move1Card(deadwood, EquipmentCard[i], temp);
+								Move1Card(EquipmentCard[i], HandCard[i], card_id);
+								board[i].isBarrel = 1;
+							}
+							
+						}
+*/
+						// JAIL
+						else if (strncmp(pointer->name, "JAIL", 4) == 0)
+						{
+							int jail_temp[PLAYER_NUM+1];
+							memset(jail_temp, 0, sizeof(jail_temp));
+							printf("Input the \"ID\" of player which you want to put in [Jail].\n");
+							for (int j=0; j<PLAYER_NUM; j++)
+							{
+								if (i == j || strncmp(Role_roleName(&role[j]), "Sheriff", 7) == 0)
+								{
+									continue;
+								}
+								if (isDead[j] == 0)
+								{
+									printf("\"%d\" Player%d\n", j+1, j+1);
+									jail_temp[j+1] = 1;
+								}
+							}
+
+							int jail_object;
+							while(1)
+							{
+								scanf("%d", &jail_object);
+								if (jail_object >= 1 && jail_object <= PLAYER_NUM && jail_temp[jail_object] == 1)
+								{
+									Move1Card(EquipmentCard[jail_object], HandCard[i], card_id);
+									board[jail_object].isJail = 1;
+
+									break;
+								}
+								printf("Invalid input!\n");
+								printf("Input the \"ID\" of player which you want to use [Catbalou]\n");
+							}
+						}
+						// DYNAMITE
+						else if (strncmp(pointer->name, "DYNAMITE", 8) == 0)
+						{
+							Move1Card(EquipmentCard[i], HandCard[i], card_id);
+							board[i].isBomb = 1;
+						}
+						// VOLCANIC (ID = 1)
+						else if (strncmp(pointer->name, "VOLCANIC", 8) == 0)
+						{
+							if (weapon[i].isVolcanic == 1)
+							{
+								printf("You already have [Volcanic].\n");
+							}
+							else
+							{
+								Move1Card(EquipmentCard[i], HandCard[i], card_id);
+								weapon[i].isVolcanic = 1;
+								weapon[i].weaponId = 1;
+							}
+						}
+/*
+						// SCHOFIELD (ID = 1)
+						else if (strncmp(pointer->name, "SCHOFIELD", 9) == 0)
+						{
+							if (weapon[i].weaponId == 1)
+							{
+								printf("You already have [Volcanic].\n");
+							}
+							else
+							{
+								Move1Card(EquipmentCard[i], HandCard[i], card_id);
+								weapon[i].isVolcanic = 1;
+								weapon[i].weaponId = 1;
+							}
+						}
+*/						
+
+						// Willy the Kid, VOLCANIC
+						if (strncmp(character[i].name, "Willy the Kid", 13) == 0 || weapon[i].isVolcanic == 1)
 						{
 							isBang = 0;
 						}
