@@ -1043,7 +1043,7 @@ int main()
 							if (board[i].hp == Character_hp(&character[i]))
 							{
 								printf("You cannot use [Beer], your hp are already full!\n");
-								press_to_continue;
+								press_to_continue();
 								continue;
 							}
 							else

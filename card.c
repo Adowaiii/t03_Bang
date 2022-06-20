@@ -81,7 +81,7 @@ void Move1Card(card *to,card *from,int number){			//dont input empty cardset
 	for(int i=0;i<number-1;i++){
 		pointer = pointer->next;
 	}
-	printf("Moved \n");
+	//printf("Moved \n");
 	card *tail = gettail(to);
 	tail->next = pointer->next;
 	tail = tail->next;
@@ -222,7 +222,7 @@ int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,str
 	draw(temp, deck, alive_count);
 	for (int i=0; i<alive_count; i++)
 	{
-		if (user == 0 && isDead[i] == 0)
+		if (user == 0 && isDead[user] == 0)
 		{
 			int j = 1;
 			printf("Which card do you want to keep?\n");
@@ -230,6 +230,7 @@ int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,str
 			{
 				temp = temp->next;
 				printf("\"%d\" %s\n", j, temp->name);
+				j++;
 			}
 			scanf("%d", &input);
 			Move1Card(set[user], temp, input);
