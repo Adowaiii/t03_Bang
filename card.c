@@ -218,6 +218,7 @@ int GENERALSTORE_2(Board board[],struct Card *set[],int user,int alive_count,str
 {
 	Move1Card(deadwood, set[user], number);
 	card *temp = malloc(sizeof(card));
+	temp->next = NULL;
 	int input;
 	draw(temp, deck, alive_count);
 	for (int i=0; i<alive_count; i++)

@@ -1040,7 +1040,7 @@ int main()
 						// BEER
 						else if (strncmp(pointer->name, "BEER", 4) == 0)
 						{
-							if (board[i].hp == Character_hp(&character[i]))
+							if (Board_hp(&board[i]) == Character_hp(&character[i]))
 							{
 								printf("You cannot use [Beer], your hp are already full!\n");
 								press_to_continue();
@@ -1048,21 +1048,24 @@ int main()
 							}
 							else
 							{
-								BEER(board, HandCard, i, 0, deck, deadwood, card_id);
+								board[i].hp++;							
+								//BEER(board, HandCard, i, 0, deck, deadwood, card_id);
 							}
+							Move1Card(deadwood, HandCard[i], card_id);
 						}
 						// SALOON
 						else if (strncmp(pointer->name, "SALOON", 6) == 0)
 						{
 							for (int j=0; j<PLAYER_NUM; j++)
 							{
-								if (isDead[j] == 1 || board[j].hp == Character_hp(&character[j]))
+								if (isDead[j] == 1 || Board_hp(&board[j]) == Character_hp(&character[j]))
 								{
 									continue;
 								}
 								else
 								{
-									BEER(board, HandCard, j, 0, deck, deadwood, card_id);
+									board[j].hp++;						
+									//BEER(board, HandCard, j, 0, deck, deadwood, card_id);
 								}
 							}
 							Move1Card(deadwood, HandCard[i], card_id);
@@ -1129,8 +1132,8 @@ int main()
 			///////* AI Player: Player2, Player3, Player4 *///////
 			else
 			{
-				printf("\n[Player%d Round]\n", i+1);
-				press_to_continue();
+				//printf("\n[Player%d Round]\n", i+1);
+				//press_to_continue();
 				///////* Dead Check ---> Next Player *///////
 				if (isDead[i] == 1)
 				{
@@ -1262,7 +1265,74 @@ int main()
 					int card_id;
 					card_num = print_HandCard(i);
 					printf("Input the \"ID\" of card which you want to play or input \"0\" to skip: ");
-					scanf("%d", &card_id);
+					if(FindCard(HandCard[i],"DYNAMITE") != -1){
+							card_id = 0;
+					}
+					if(board[i].isBarrel == false && FindCard(HandCard[i],"BARREL") != -1){
+						card_id = FindCard(HandCard[i],"BARREL");
+					}
+					if(board[i].isScope == false && FindCard(HandCard[i],"SCOPE ") != -1){
+						card_id = FindCard(HandCard[i],"SCOPE ");
+					}
+					if(FindCardt(HandCard[i],"MUSTANG") != -1){
+						card_id = FindCardt(HandCard[i],"MUSTANG");
+					}
+					if(FindCardt(HandCard[i],"weapon") != -1){
+						card_id = FindCardt(HandCard[i],"weapon");
+					}
+					if(FindCard(HandCard[i],"JAIL") != -1){
+				//		for(int temp = 0,max = 0;temp < PLAYER_NUM ;temp ++){
+				//			if(temp != i){
+				//				if(coundCard(HandCard[temp]) > max){
+				//					max = temp;
+				//					option max;
+				//				}
+				//			}
+				//		}
+						card_id = FindCard(HandCard[i],"JAIL");
+					}
+					if(FindCard(HandCard[i],"DUEL") != -1 && countCardName(HandCard[i],"BANG") >= 3){
+						card_id = FindCard(HandCard[i],"DUEL");
+					}
+					if(board[i].hp < character[i].hp && card_id != 0){
+						if(FindCard(HandCard[i],"BEER") != -1){
+							card_id = FindCard(HandCard[i],"BEER");
+						}
+						else if(FindCard(HandCard[i],"SALOON") != -1){
+							card_id = FindCard(HandCard[i],"SALOON");
+						}
+					}
+					if(card_id != 0){
+						if(FindCard(HandCard[i],"STAGECOACH") != -1){
+							card_id = FindCard(HandCard[i],"STAGECOACH");
+						}
+						else if(FindCard(HandCard[i],"WELLS FARGO") != -1){
+							card_id = FindCard(HandCard[i],"WELLS FARGO");
+						}
+						else if(FindCard(HandCard[i],"GENERAL STORE") != -1){
+							card_id = FindCard(HandCard[i],"GENERAL STORE");
+						}
+						else if(FindCard(HandCard[i],"PANIC") != -1){
+							card_id = FindCard(HandCard[i],"PANIC");
+						}
+						else if(FindCard(HandCard[i],"CAT BALOU") != -1){
+							card_id = FindCard(HandCard[i],"CAT BALOU");
+						}
+					}
+					if(card_id != 0){
+						if(FindCard(HandCard[i],"GATLING") != -1){
+							card_id = FindCard(HandCard[i],"GATLING");
+						}
+						else if(FindCard(HandCard[i],"INDIANS") != -1){
+							card_id = FindCard(HandCard[i],"INDIANS");
+						}
+						else if(FindCard(HandCard[i],"BANG") != -1 && isBang == 0){
+							card_id = FindCard(HandCard[i],"BANG");
+						}
+					}
+					if(countCard(HandCard[i]) <= board[i].hp){
+						card_id = 0;
+					}
 
 					print_board();
 					printf("\n[Player%d Round]\n", i+1);
@@ -1270,7 +1340,7 @@ int main()
 					// Skip
 					if (card_id == 0)
 					{
-						///////* Discard Check *///////
+						///////* Discard Check *///////robot
 						while (discard_check(card_num, i) == 1)
 						{
 							print_board();
@@ -1279,7 +1349,18 @@ int main()
 							int discard_id;
 							print_HandCard(i);
 							printf("There are too many cards! Input the \"ID\" of card which you want to discard: ");
-							scanf("%d", &discard_id);
+							if(FindCard(HandCard[i],"DYNAMITE") != -1){
+								discard_id = FindCard(HandCard[i],"DYNAMITE");
+							}
+							else if(FindCard(HandCard[i],"JAIL") != -1){
+								discard_id = FindCard(HandCard[i],"JAIL");
+							}
+							else if(FindCard(HandCard[i],"SCHOFIELD") != -1){
+								discard_id = FindCard(HandCard[i],"SCHOFIELD");
+							}
+							else{
+								discard_id = rand()%(countCard(HandCard[i]))+1; 
+							}
 
 							if (discard_id < 0 || discard_id > card_num)
 
@@ -1292,18 +1373,16 @@ int main()
 								card_num--;
 								printf("Successfully discard!\n");
 							}
-							press_to_continue();
 						}
 					
 						break;
 					}
-					// Play Card
+					// Play Card 
 					else
 					{
 						if (card_id < 0 || card_id > card_num)
 						{
 							printf("Invalid \"ID\"!\n");
-							press_to_continue();
 							continue;
 						}						
 
@@ -1320,7 +1399,6 @@ int main()
 							if (isBang == 1)
 							{
 								printf("You have already used the [Bang!]\n");
-								press_to_continue();
 								continue;
 							}							
 
@@ -1350,7 +1428,6 @@ int main()
 								if (_CalamityJanet_() == 2)
 								{
 									printf("You cannot play [Missed!] card.\n");
-									press_to_continue();
 									continue;
 								}
 								else
@@ -1370,7 +1447,6 @@ int main()
 							else
 							{
 								printf("You cannot play [Missed!] card.\n");
-								press_to_continue();
 								continue;
 							}
 						}
@@ -1479,7 +1555,6 @@ int main()
 							if (board[i].hp == Character_hp(&character[i]))
 							{
 								printf("You cannot use [Beer], your hp are already full!\n");
-								press_to_continue;
 								continue;
 							}
 							else
@@ -1551,7 +1626,6 @@ int main()
 					}
 					else
 					{
-						press_to_continue();
 						
 						continue;
 					}				
@@ -1561,6 +1635,7 @@ int main()
 				//break;
 
 				i = round_check(i);
+
 				
 			}
 		
