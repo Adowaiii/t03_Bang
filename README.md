@@ -51,7 +51,7 @@ There! You can play it on your terminal! :)
   |:---:|:---|
   |Bart Cassidy|Each time he loses a life point, he immediately draws a card from the deck.|
   |Black Jack|During drawing phase of his turn, he must show the second card he draws. If it's Heart or Diamond, he draws one additional card without revealing it.|
-  |Calamity Janet`(SHE IS NOT WORKING.DON'T PLAY HER)`|She can use [Bang!] cards as [Missed!] cards and vice versa. If she plays a [Missed!] as a [Bang!], she cannot play another [Bang!] card that turn unless she has a [Volcanic] in play.|
+  |Calamity Janet`(SHE IS NOT WORKING)`|She can use [Bang!] cards as [Missed!] cards and vice versa. If she plays a [Missed!] as a [Bang!], she cannot play another [Bang!] card that turn unless she has a [Volcanic] in play.|
   |El Gringo|Each time he loses a life point due to a card played by another player, he draws a random card from the hands of that player. Note that [Dynamite] damages are not caused by any player.|
   |Jesse Jones|During drawing phase of his turn, he may choose to draw the first card from the deck, or randomly from the hand of any other player. Then he draws the second card from the deck.|
   |Jourdonnais`(HE IS NOT WORKING)`|He is considered to have a [Barrel] in play at all times; he can draw when he is the target of a [Bang!], and on a Heart he is missed. If he has another real [Barrel] card in play, he can count both of them, giving him two chances to cancel the [Bang!] before playing a [Missed!].|
@@ -62,7 +62,7 @@ There! You can play it on your terminal! :)
   |Rose Doolan|She is considered to have a [Scope] in play at all times; she sees other players at a distance decreased by 1. If she has another real [Scope] in play, she can count both of them, reducing her distance to all other players by a total of 2.|
   |Sid Ketchum`(NOT WORKING)`|At any time, he may discard 2 cards from his hand to regain one life point. If he is willing and able, he can use this ability more than once at a time.|
   |Slab the Killer|Players trying to cancel his [Bang!] cards need to play 2 [Missed!]. The [Barrel] effect, if successfully used, only counts as one [Missed!].|
-  |Suzy Lafayette(`WORKING`)|As soon as she has no cards in her hand, she draws a card from the draw pile.|
+  |Suzy Lafayette(`NOT WORKING`)|As soon as she has no cards in her hand, she draws a card from the draw pile.|
   |Vulture Sam|Whenever a character is eliminated from the game, he takes all the cards that player had in his hand and in play, and adds them to his hand.|
   |Willy the Kid|He can play any number of [Bang!] cards during his turn.|
 
@@ -81,16 +81,16 @@ There! You can play it on your terminal! :)
   |     啤酒     |     Beer      | 6 | 消耗品 |
   |     酒館     |    Saloow     |  1   | 消耗品 |
   |     決鬥     |     Duel      | 3 | 消耗品 |
-  |    啤酒桶(NOT WORKING)    |    Barrel     | 2 |  裝備  |
+  |    啤酒桶`(NOT WORKING)`   |    Barrel     | 2 |  裝備  |
   | 望眼鏡瞄準器 |     Scope     |  1   |  裝備  |
-  |     野馬(NOT WORKING)     |    Mustang    | 2 |  野馬  |
+  |     野馬`(NOT WORKING)`    |    Mustang    | 2 |  野馬  |
   |     監獄     |     Jail      | 2 |  裝備  |
-  |     炸藥(NOT WORKING?)    |    Dynamic    |  1   |  裝備  |
-  |    連發槍(NOT WORKING)    |   Volcanic    | 2 |  武器  |
-  |  史考菲爾德(NOT WORKING)  |   Schofield   | 3 |  武器  |
-  |    雷明頓(NOT WORKING)    |   Remington   |  1   |  武器  |
-  |    卡賓槍(NOT WORKING)    | Rev.Carabine  |  1   |  武器  |
-  |   溫徹斯特(NOT WORKING)   |  Winchedter   |  1   |  武器  |
+  |     炸藥`(NOT WORKING?)`    |    Dynamic    |  1   |  裝備  |
+  |    連發槍`(NOT WORKING)`    |   Volcanic    | 2 |  武器  |
+  |  史考菲爾德`(NOT WORKING)`  |   Schofield   | 3 |  武器  |
+  |    雷明頓`(NOT WORKING)`    |   Remington   |  1   |  武器  |
+  |    卡賓槍`(NOT WORKING)`    | Rev.Carabine  |  1   |  武器  |
+  |   溫徹斯特`(NOT WORKING)`   |  Winchedter   |  1   |  武器  |
 
 ### Basic Game Flowchart
 ```mermaid
@@ -219,6 +219,14 @@ Bang/
 
 
 ## Work Log
+#### 6/11
+- Team work:
+  - 許：LinkedList
+  - 陳：Game Rules
+  - 林：Object Definement
+#### 6/13
+- 1st Meeting @ school
+
 #### 6/14
 - Plan out Basic Outline
 
