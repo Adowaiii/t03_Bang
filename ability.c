@@ -66,33 +66,31 @@ void _Blackjack_ (Player player, card *deck){
 //能力：在抽牌階段時，第一張牌可以選擇從遊戲牌堆中或是任一位玩家的手牌中抽牌。
 //第二張則是從遊戲牌中抽牌。
 
-void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4],Character allCharacter[4], int isDead[4]){
+void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4], int isDead[4]){
     int tmp;
     int list[3] = {0};
     printf("Which deck do you want to draw from?\n\"1\" Deck\n\"2\" Player\n");
     scanf("%d", &tmp);
     if (tmp == 1)
-        draw (playerAs.CardinHand, deck, 1);
+        draw (playerAs.CardinHand,deck, 1);
     else{
 
         printf("Which Player's hand do you want to draw from?\n\n");
-        for(int i=0; i< 4; i++){
+        for(int i=0; i< 3; i++){
             if (i == playerAs.id || isDead[i] == 1)
                 continue;
-            printf("\"%d\" Player%d\n", i+1, i+1);
-            
+            printf("\"%d\" Player%d (as %s)", i+1, allPlayer[i].id, allCharacter[i].name);
+            list[i] = 1;
         }
         printf("\n");
         scanf("%d", &tmp);
-        list[tmp-1] = 1;
-        while (1){
-            
-            if (list[tmp-1]){
-                draw(playerAs.CardinHand, allPlayer[tmp-1].CardinHand, 1);
+        while (!check(tmp, list)){
+            printf("Please enter a valid choice!\n");
+            scanf("%d", &tmp);
+            if (check(tmp, list)){
+                draw(playerAs.CardinHand, allPlayer[tmp].CardinHand, 1);
                 break;
             }
-	    printf("Please enter a valid choice!\n");
-            scanf("%d", &tmp);
         }
     }
 }
@@ -103,34 +101,28 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4],Character al
 void _KitCarlson_(Player player, card *deck) {
     
     int chose;
-    int list[3] = {0};
-    card *drawn = malloc(sizeof(card));
-    drawn->next = NULL;
-    card *pin;
-    pin = drawn;
+    int list[3];
+    card *drawn;
     draw(drawn, deck, 3);
-    print(drawn);
     printf("Which do you want to **put back** in deck?\n");
     for (int i=0;i<3;i++){
-		pin = pin->next;
-		printf("\"%d\" %s \n", i+1, pin->name);
-		
+		drawn = drawn->next;
+		printf("\"%d\" %s ", i+1, drawn->name);
+        list[i] == 1;
 	} 
     printf("\n");
     scanf("%d", &chose);
-    list[chose-1] = 1;
-    //printf("%d\n", list[chose-1]);
-    while (1){           
-            if (list[chose-1]){	
-                Move1Card(deck, drawn, chose);
+    while (!check(chose, list)){
+            printf("Please enter a valid choice!\n");
+            scanf("%d", &chose);
+            if (check(chose, list)){
+                //Pick one card back to deck
+                Move1Card(deck, player.CardinHand, chose);
                 //Put the rest to hand
                 Move1Card(player.CardinHand, drawn, 1);
                 Move1Card(player.CardinHand, drawn, 1);
-		free(drawn);
                 break;
             }
-	    printf("Please enter a valid choice!\n");
-            scanf("%d", &chose);
         }    
 }
 
@@ -163,7 +155,7 @@ int _CalamityJanet_()
         int tmp;
 	while (1)
 	{
-		printf("Which card do you want to use it as?\n\n\"1\" BANG\n\"2\"MISSED\n");
+		printf("Which card do you want to use it as?\n\n\"1\" BANG\n \"2\"MISSED\n");
 		scanf("%d", &tmp);
 		if (tmp == 1)
 		{
