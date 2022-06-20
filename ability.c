@@ -66,31 +66,33 @@ void _Blackjack_ (Player player, card *deck){
 //能力：在抽牌階段時，第一張牌可以選擇從遊戲牌堆中或是任一位玩家的手牌中抽牌。
 //第二張則是從遊戲牌中抽牌。
 
-void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character allCharacter[4], int isDead[4]){
+void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4],Character allCharacter[4], int isDead[4]){
     int tmp;
     int list[3] = {0};
     printf("Which deck do you want to draw from?\n\"1\" Deck\n\"2\" Player\n");
     scanf("%d", &tmp);
     if (tmp == 1)
-        draw (playerAs.CardinHand,deck, 1);
+        draw (playerAs.CardinHand, deck, 1);
     else{
 
         printf("Which Player's hand do you want to draw from?\n\n");
-        for(int i=0; i< 3; i++){
+        for(int i=0; i< 4; i++){
             if (i == playerAs.id || isDead[i] == 1)
                 continue;
-            printf("\"%d\" Player%d (as %s)", i+1, allPlayer[i].id, allCharacter[i].name);
-            list[i] = 1;
+            printf("\"%d\" Player%d\n", i+1, i+1);
+            
         }
         printf("\n");
         scanf("%d", &tmp);
-        while (!check(tmp, list)){
-            printf("Please enter a valid choice!\n");
-            scanf("%d", &tmp);
-            if (check(tmp, list)){
-                draw(playerAs.CardinHand, allPlayer[tmp].CardinHand, 1);
+        list[tmp-1] = 1;
+        while (1){
+            
+            if (list[tmp-1]){
+                draw(playerAs.CardinHand, allPlayer[tmp-1].CardinHand, 1);
                 break;
             }
+	    printf("Please enter a valid choice!\n");
+            scanf("%d", &tmp);
         }
     }
 }
@@ -101,28 +103,34 @@ void _JesseJones_ (Player playerAs, card *deck, Player allPlayer[4], Character a
 void _KitCarlson_(Player player, card *deck) {
     
     int chose;
-    int list[3];
-    card *drawn;
+    int list[3] = {0};
+    card *drawn = malloc(sizeof(card));
+    drawn->next = NULL;
+    card *pin;
+    pin = drawn;
     draw(drawn, deck, 3);
+    print(drawn);
     printf("Which do you want to **put back** in deck?\n");
     for (int i=0;i<3;i++){
-		drawn = drawn->next;
-		printf("\"%d\" %s ", i+1, drawn->name);
-        list[i] == 1;
+		pin = pin->next;
+		printf("\"%d\" %s \n", i+1, pin->name);
+		
 	} 
     printf("\n");
     scanf("%d", &chose);
-    while (!check(chose, list)){
-            printf("Please enter a valid choice!\n");
-            scanf("%d", &chose);
-            if (check(chose, list)){
-                //Pick one card back to deck
-                Move1Card(deck, player.CardinHand, chose);
+    list[chose-1] = 1;
+    //printf("%d\n", list[chose-1]);
+    while (1){           
+            if (list[chose-1]){	
+                Move1Card(deck, drawn, chose);
                 //Put the rest to hand
                 Move1Card(player.CardinHand, drawn, 1);
                 Move1Card(player.CardinHand, drawn, 1);
+		free(drawn);
                 break;
             }
+	    printf("Please enter a valid choice!\n");
+            scanf("%d", &chose);
         }    
 }
 
@@ -145,6 +153,61 @@ void _PedroRamirez_(Player playerAs, card *deck, card *deadwood){
         draw(playerAs.CardinHand, deadwood, 1);
             
 }
+
+//Calamity Janet
+//能力：遊戲牌中的【閃躲】可以當【Bang】用；【Bang】也可以當【閃躲】用。
+//當【閃躲】當【Bang】用時，還是必須遵守只能出一張砰的規則。
+
+int _CalamityJanet_()
+{
+        int tmp;
+	while (1)
+	{
+		printf("Which card do you want to use it as?\n\n\"1\" BANG\n\"2\"MISSED\n");
+		scanf("%d", &tmp);
+		if (tmp == 1)
+		{
+		    return tmp;
+		}
+		else if (tmp == 2)
+		{  
+		    return tmp;
+		}
+		printf("Invalid input!\n");
+	}
+}
+/*
+//Slab the Killer
+//能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
+//如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
+//還需要再出一張【閃躲】才能真正躲過他的【Bang】。
+
+void _SlabTheKiller_(card *HandCard[4], int killer, int bang_object, )
+{
+	if (FindCard(HandCard[bang_object], "MISSED") != -1)
+	{
+		
+	}
+}
+int _SlabTheKiller_(Player playerOffense, Player PlayerHurt, card *HurtPlayerCardinHand)
+{   
+	if (FindCard(HurtPlayerCardinHand, "MISSED"))
+	{
+        	//printf("They missed!\n");
+        	//printf("But wait! Here comes another shot!\n");
+        	if (FindCard(HurtPlayerCardinHand, "MISSED"))
+		{
+            		return 1;
+        	}
+		else
+		{
+            		return 0;
+       		}
+    	}
+        
+    	return 0;
+}
+*/
 
 /*
 #include<stdio.h>
@@ -332,36 +395,6 @@ card _LuckyDuke_(Player player, card *deck, card *deadwood) {
     
 }
 
-//////////////////////////////// IN MAIN ///////////////////////////////////////////
-//Paul Regret                                                                     //
-//能力：其他玩家看他的距離+1。他仍然可以再裝備【野馬】，裝備後距離共+2。             //
-////////////////////////////////////////////////////////////////////////////////////
-
-//Pedro Ramirez
-//能力：在抽牌階段時，第一張牌可以選擇從棄牌堆或遊戲牌堆中抽牌，
-//第二張牌只能從遊戲牌中抽牌。
-void _PedroRamirez_ (Player playerAs, card *deck, card *deadwood){
-    
-    int tmp;
-
-    printf("Which deck do you want to draw from?\n\n\"1\" Deck \"2\" Deadwood");
-    scanf("%d", &tmp);
-    while (tmp != 1 && tmp != 2){
-        printf("Please enter a valid choice!\n");
-        scanf("%d", &tmp);
-    }
-    if (tmp == 1)
-        draw (playerAs.CardinHand, deck, 1);
-    if (tmp == 2)
-        draw (playerAs.CardinHand, deadwood, 1);
-            
-}
-
-//////////////////////////////// IN MAIN ///////////////////////////////////////////
-//Rose Doolan                                                                     //
-//能力：看別的玩家的距離-1。他仍然可以裝備【瞄準器】，裝備後看其他玩家距離-2。       //
-////////////////////////////////////////////////////////////////////////////////////
-
 //Sid Ketchum
 //能力：任何時刻都可以丟棄兩張卡牌，替自己補一滴血，且次數不限。
 
@@ -373,25 +406,6 @@ void _SidKetchum_(Player player, card *deadwood, Board board[4]) {
 
 }
 
-//Slab the Killer
-//能力：其他玩家要躲過他出的【Bang】必須出兩張【閃躲】。
-//如果其他人的【酒桶】成功觸發躲過時，只算一次【閃躲】，
-//還需要再出一張【閃躲】才能真正躲過他的【Bang】。
-
-int _SlabTheKiller_(Player playerOffense, Player PlayerHurt, card *HurtPlayerCardinHand) {
-    
-    if(FindCard(HurtPlayerCardinHand, "MISSED")){
-        printf("They missed!\n");
-        printf("But wait! Here comes another shot!\n");
-        if(FindCard(HurtPlayerCardinHand, "MISSED")){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-        
-    return 0;
-}
 
 //Suzy Lafayette
 //能力：沒手牌時，可以立即從遊戲牌庫頂抽一張牌。
@@ -402,28 +416,9 @@ void _SuzyLafayette_(Player player, card *deck) {
     }
 }
 */
-/*
-//Vulture Sam
-//能力：當一位玩家死亡時，接收該死亡玩家的手牌和場上的【裝備牌】到自己的手牌中。
-
-void _VultureSam_(Player playerAs, Player playerDead, card *set[4], Board board[4]) {
-    while(playerDead.CardinHand != NULL){
-        Move1Card (playerAs.CardinHand, playerDead.CardinHand, 1);
-    }
-    //card set[4] = {/*Scope Card*///, /*Barrel Card*/, /*Jail Card*/, /*Bomb Card*///};
-    //if (board[playerDead.id].isScope)
-      //  Move1Card (playerAs.CardinHand, set[0], 0); //*Scope Card*
-    //if (board[playerDead.id].isBarrel)
-      //  Move1Card (playerAs.CardinHand, set[1], 1); //*Barrel Card*
-	//if (board[playerDead.id].isJail)
-//        Move1Card (playerAs.CardinHand, set[2], 2); //Jail Card
-  //  if (board[playerDead.id].isBomb)
-    //    Move1Card (playerAs.CardinHand, set[3], 3); //Bomb Card
-            
-      
-//}
 
 /////////////////////////////////////IN MAIN////////////////////////////////////////
 //Willy the Kid                                                                   //
 //能力：在他的回合，出【Bang】的張數沒有限制。                                      //
 ////////////////////////////////////////////////////////////////////////////////////
+
