@@ -9,9 +9,7 @@ This is a text-adventure-like replica of board game `BANG!`. This game is a stan
 - 40711013E 林亮均
 - 40611010E 陳柔諭
 - 40547022S 許欣平
-- 林亮均
-- 陳柔諭
-- 許欣平
+
 
 ## Team Work
 
@@ -20,9 +18,6 @@ This is a text-adventure-like replica of board game `BANG!`. This game is a stan
 |林亮均|34%|主要遊戲架構、物件型別建立、Debug|
 |陳柔諭|33%|遊戲架構支援、角色能力、物件型別建立、Debug|
 |許欣平|33%|遊戲架構支援、道具效果、物件型別建立、Debug|
-|林亮均|%|Dummy|
-|陳柔諭|%|Dummy|
-|許欣平|%|Dummy|
 
 ## How To Play
 
