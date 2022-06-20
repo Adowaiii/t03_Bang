@@ -16,7 +16,9 @@
 #include "ability.h"
 
 #define PLAYER_NUM 4
-
+#define YELLOW  "\x1b[33m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
 Player player[PLAYER_NUM];
 card *deck;
 card *deadwood;
@@ -172,7 +174,7 @@ int distance_attack(int player_id)
 	int bang_player;
 	int bang_available[PLAYER_NUM+1];
 	memset(bang_available, 0, sizeof(bang_available));
-	printf("Input the \"ID\" of player which you want to [Bang!]\n");
+	printf("Input the \"ID\" of player which you want to" YELLOW "[Bang!]" RESET "\n");
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		if (i == player_id)
@@ -190,13 +192,18 @@ int distance_attack(int player_id)
 
 	if (bang_num == 0)
 	{
-		printf("You cannot [Bang!] anyone.\n");
+		printf("You cannot" YELLOW "[Bang!]" RESET " anyone.\n");
 		return 0;
 	}
 
 	while (1)
 	{
-		scanf("%d", &bang_player);
+		if(player_id == 0){
+			scanf("%d", &bang_player);
+		}
+		else{
+			bang_player = 1;
+		}
 		// Jourdonnais
 		if (strncmp(Character_name(&character[bang_player-1]), "Jourdonnais", 11) == 0)
 		{
@@ -215,14 +222,14 @@ int distance_attack(int player_id)
 			return bang_player;
 		}
 		printf("Invalid input!\n");
-		printf("Input the \"ID\" of player which you want to [Bang!]\n");
+		printf("Input the \"ID\" of player which you want to " YELLOW "[Bang!]" RESET "\n");
 	}
 }
 
 void print_board()
 {
 	system("clear");
-	printf("============================================================================================‖ Board Information‖ ===========================================================================================\n\n");
+	printf("============================================================================================∥ Board Information∥ ===========================================================================================\n\n");
 	for (int i=0; i<PLAYER_NUM; i++)
 	{
 		// Dead
@@ -246,10 +253,10 @@ void print_board()
 		}
 
 		// Hp
-		printf(" - Hp: %d\n", Board_hp(&board[i]));
+		printf(" - Hp: \033[1;31m%d\033[0m", Board_hp(&board[i]));
 
 		// Character
-		printf(" - Character: %s\n", character[i].name);
+		printf(" - Character:" CYAN " %s\n" RESET, character[i].name);
 		printf(" - Ability: %s\n", Character_ability(&character[i]));
 
 		// Equipment Card
@@ -272,15 +279,12 @@ void print_board()
 
 void press_to_continue()
 {
-	char c[1];
+	int c;
 	printf("\nPress [C] to Continue...\n");
 	while (1)
 	{
-		scanf("%s", c);
-		if (c[0] == 'C' || c[0] == 'c')
-		{
-			break;
-		}
+		c = getchar();            // Get one character from the input
+        if (c == 99 || c == 67) { break; }  // Exit the loop if we receive ESC
 	}
 
 	return;
@@ -533,7 +537,7 @@ int main()
 	////////////////////////////////////////////////////////////////////////////////
 
 	system("clear");                            
-	printf("                                                                      ====================================================                                                                      \n");
+	printf(YELLOW"                                                                      ====================================================                                                                      \n");
 	printf("                                                                      ‖    /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$  ‖\n");
 	printf("                                                                      ‖   | $$__  $$ /$$__  $$| $$$ | $$ /$$__  $$| $$  ‖\n");
 	printf("                                                                      ‖   | $$  %c $$| $$  %c $$| $$$$| $$| $$  %c__/| $$  ‖\n", 92, 92, 92);
@@ -542,10 +546,10 @@ int main()
 	printf("                                                                      ‖   | $$  %c $$| $$  | $$| $$%c  $$$| $$  %c $$      ‖\n", 92, 92, 92);
 	printf("                                                                      ‖   | $$$$$$$/| $$  | $$| $$ %c  $$|  $$$$$$/ /$$  ‖\n", 92);
 	printf("                                                                      ‖   |_______/ |__/  |__/|__/  %c__/ %c______/ |__/  ‖\n", 92, 92);
-	printf("                                                                      ====================================================\n");
+	printf("                                                                      ====================================================\n" RESET);
 	printf("\n                                                                                     - Welcome to Bang! -\n\n");
-	printf("                                                                                    ‖ Press [S] to Start‖\n");
-	printf("                                                                                    ‖ Press [E] to Exit ‖\n");
+	printf("                                                                                    ‖ Press" YELLOW "[S]" RESET "to Start‖\n");
+	printf("                                                                                    ‖ Press" YELLOW "[E]" RESET "to Exit ‖\n");
 
 	////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////  GAME SETTING  /////////////////////////////////////
@@ -884,7 +888,7 @@ int main()
 						{
 							if (isBang == 1)
 							{
-								printf("You have already used the [Bang!]\n");
+								printf("You have already used the " YELLOW "[Bang!]" RESET "\n");
 								press_to_continue();
 								continue;
 							}							
@@ -1132,8 +1136,8 @@ int main()
 			///////* AI Player: Player2, Player3, Player4 *///////
 			else
 			{
-				//printf("\n[Player%d Round]\n", i+1);
-				//press_to_continue();
+				printf("\n[Player%d Round]\n", i+1);
+				press_to_continue();
 				///////* Dead Check ---> Next Player *///////
 				if (isDead[i] == 1)
 				{
@@ -1330,9 +1334,8 @@ int main()
 							card_id = FindCard(HandCard[i],"BANG");
 						}
 					}
-					if(countCard(HandCard[i]) <= board[i].hp){
-						card_id = 0;
-					}
+					
+					card_id = 0;
 
 					print_board();
 					printf("\n[Player%d Round]\n", i+1);
@@ -1340,7 +1343,7 @@ int main()
 					// Skip
 					if (card_id == 0)
 					{
-						///////* Discard Check *///////robot
+						///////* Discard Check *///////
 						while (discard_check(card_num, i) == 1)
 						{
 							print_board();
@@ -1377,12 +1380,13 @@ int main()
 					
 						break;
 					}
-					// Play Card 
+					// Play Card
 					else
 					{
 						if (card_id < 0 || card_id > card_num)
 						{
 							printf("Invalid \"ID\"!\n");
+							press_to_continue();
 							continue;
 						}						
 
@@ -1398,7 +1402,8 @@ int main()
 						{
 							if (isBang == 1)
 							{
-								printf("You have already used the [Bang!]\n");
+								printf("You have already used the" YELLOW "[Bang!]" RESET "\n");
+								press_to_continue();
 								continue;
 							}							
 
@@ -1428,6 +1433,7 @@ int main()
 								if (_CalamityJanet_() == 2)
 								{
 									printf("You cannot play [Missed!] card.\n");
+									press_to_continue();
 									continue;
 								}
 								else
@@ -1447,6 +1453,7 @@ int main()
 							else
 							{
 								printf("You cannot play [Missed!] card.\n");
+								press_to_continue();
 								continue;
 							}
 						}
@@ -1482,7 +1489,7 @@ int main()
 							int panic_object;
 							while(1)
 							{
-								scanf("%d", &panic_object);
+								panic_object = rand() % 4;
 								if (panic_object >= 1 && panic_object <= PLAYER_NUM && panic_temp[panic_object] == 1)
 								{
 									PANIC(board, HandCard, i, panic_object-1, deck, deadwood, card_id);
@@ -1514,7 +1521,7 @@ int main()
 							int catbalou_object;
 							while(1)
 							{
-								scanf("%d", &catbalou_object);
+								catbalou_object = rand() % 4;
 								if (catbalou_object >= 1 && catbalou_object <= PLAYER_NUM && catbalou_temp[catbalou_object] == 1)
 								{
 									CATBALOU(board, HandCard, i, catbalou_object-1, deck, deadwood, card_id);
@@ -1555,6 +1562,7 @@ int main()
 							if (board[i].hp == Character_hp(&character[i]))
 							{
 								printf("You cannot use [Beer], your hp are already full!\n");
+								press_to_continue;
 								continue;
 							}
 							else
@@ -1600,7 +1608,7 @@ int main()
 							int duel_object;
 							while(1)
 							{
-								scanf("%d", &duel_object);
+								duel_object = rand() % 4;
 								if (duel_object >= 1 && duel_object <= PLAYER_NUM && duel_temp[duel_object] == 1)
 								{
 									DUEL(board, HandCard, i, duel_object-1, deck, deadwood, card_id);
@@ -1624,21 +1632,15 @@ int main()
 						// End the game.
 						return 0;
 					}
-					else
-					{
-						
-						continue;
-					}				
+									
 					break;
 				}
 
 				//break;
 
 				i = round_check(i);
-
 				
 			}
-		
 		}
 		//break;
 	}
