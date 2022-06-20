@@ -1,5 +1,5 @@
-
 #include "player.h"
+
 void Player_Ctor(Player *this, int id, int BoardNum, card *CardinHand)
 {
     this->id = id;
